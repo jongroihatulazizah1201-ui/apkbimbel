@@ -88,7 +88,7 @@ export default function KelolaKelasStafPage() {
             <tbody className="divide-y divide-slate-100">
               {kelasList.map((k) => {
                 const tutorUser = tutors.find((t) => t.id === k.tutorId);
-                const tutorAvatar = tutorUser?.avatar || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80";
+                const tutorAvatar = tutorUser?.avatar || "/avatars/kak_dimas.jpg";
 
                 return (
                   <tr key={k.id} className="hover:bg-slate-50/80 transition">

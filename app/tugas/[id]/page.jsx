@@ -51,53 +51,6 @@ export default function TugasSiswaDetailPage({ params }) {
         <ArrowLeft className="w-3.5 h-3.5" /> Kembali ke {kelas.nama}
       </Link>
 
-      {/* Simulasi 4 Keadaan Status Tugas Sesuai PRD 4.5 & 5.2 */}
-      <div className="panel p-3.5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-        <span className="font-semibold text-[#1F2937]">Simulasi 4 Keadaan Tugas (PRD 4.5):</span>
-        <div className="flex gap-1.5 flex-wrap">
-          <button
-            onClick={() => { setSubmissionState("belum"); setSuccessMsg(""); }}
-            className={`px-3 py-1 rounded text-xs font-semibold transition ${
-              submissionState === 'belum' 
-                ? 'bg-[#6B7280] text-white shadow-sm' 
-                : 'bg-[#F7F5F2] text-[#5A6B78] hover:text-[#1F2937] border border-[#E5E7EB]'
-            }`}
-          >
-            Belum dikumpulkan
-          </button>
-          <button
-            onClick={() => { setSubmissionState("dikumpulkan"); setSuccessMsg(""); }}
-            className={`px-3 py-1 rounded text-xs font-semibold transition ${
-              submissionState === 'dikumpulkan' 
-                ? 'bg-[#F59E0B] text-white shadow-sm' 
-                : 'bg-[#F7F5F2] text-[#5A6B78] hover:text-[#1F2937] border border-[#E5E7EB]'
-            }`}
-          >
-            Dikumpulkan
-          </button>
-          <button
-            onClick={() => { setSubmissionState("dinilai"); setSuccessMsg(""); }}
-            className={`px-3 py-1 rounded text-xs font-semibold transition ${
-              submissionState === 'dinilai' 
-                ? 'bg-[#15A66A] text-white shadow-sm' 
-                : 'bg-[#F7F5F2] text-[#5A6B78] hover:text-[#1F2937] border border-[#E5E7EB]'
-            }`}
-          >
-            Dinilai (Nilai 85)
-          </button>
-          <button
-            onClick={() => { setSubmissionState("terlambat"); setSuccessMsg(""); }}
-            className={`px-3 py-1 rounded text-xs font-semibold transition ${
-              submissionState === 'terlambat' 
-                ? 'bg-[#E53935] text-white shadow-sm' 
-                : 'bg-[#F7F5F2] text-[#5A6B78] hover:text-[#1F2937] border border-[#E5E7EB]'
-            }`}
-          >
-            Terlambat
-          </button>
-        </div>
-      </div>
-
       <div className="panel space-y-6">
         {/* Header Judul & Status Badge (PRD 5.2) */}
         <div className="flex justify-between items-start gap-4">
@@ -139,16 +92,16 @@ export default function TugasSiswaDetailPage({ params }) {
               <div className="flex items-center gap-2 text-xs text-[#15A66A] font-bold mb-1.5">
                 <div className="relative w-5 h-5 rounded-full overflow-hidden border border-[#B6ECD5] shrink-0">
                   <Image
-                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"
+                    src="/avatars/kak_dimas.jpg"
                     alt="Kak Dimas Tutor"
                     fill
                     className="object-cover"
                   />
                 </div>
-                <span>Umpan Balik Kak Dimas:</span>
+                <span>Umpan Balik Tutor:</span>
               </div>
               <p className="text-xs text-[#1F2937] bg-white border border-[#B6ECD5] p-3 rounded-lg leading-relaxed italic">
-                “Pengerjaan tugas Raka sudah sangat terstruktur dan logika analisis pada penalaran deduktif di nomor 15 sangat tepat. Pertahankan!”
+                “Pengerjaan tugas sudah sangat terstruktur dan logika analisis pada penalaran deduktif di nomor 15 sangat tepat. Pertahankan!”
               </p>
             </div>
           </div>

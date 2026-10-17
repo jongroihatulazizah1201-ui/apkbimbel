@@ -16,7 +16,7 @@ async function seedFirestore() {
     {
       id: "user_superadmin_arif",
       nama: "Pak Arif",
-      email: "arif.bimbel@langkahjuara.id",
+      email: "superadmin@langkahjuara.id",
       noHp: "081122334455",
       noHpOrangTua: "",
       role: "super_admin",

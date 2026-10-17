@@ -104,7 +104,7 @@ export default function RincianPenggunaAdminDetailPage({ params }) {
   const isSelf = Boolean(
     (authUser && authUser.uid === id) ||
     (authProfile && authProfile.email && userData && authProfile.email.toLowerCase() === userData.email?.toLowerCase()) ||
-    (authProfile && (authProfile.role === "super_admin" || authProfile.role === "admin") && (id === "4Ql6SyZyZyS4srPlBrn1VLubPi02" || id === "tBuB7BlwlmOZ7ZvmLAQlRNDH7OX2" || id === "user_superadmin_arif" || id === "user-6"))
+    (authProfile && (authProfile.role === "super_admin" || authProfile.role === "admin") && (id === "O57OD9LYIgWvWEUGElYImGAo9L63" || id === "4Ql6SyZyZyS4srPlBrn1VLubPi02" || id === "tBuB7BlwlmOZ7ZvmLAQlRNDH7OX2" || id === "user_superadmin_arif" || id === "user-6"))
   );
 
   const handleSave = async (e) => {
@@ -254,12 +254,12 @@ export default function RincianPenggunaAdminDetailPage({ params }) {
           </div>
         )}
 
-        {/* Peringatan Proteksi Akun Sendiri Sesuai PRD 4.15 */}
+        {/* Peringatan Proteksi Akun Sendiri */}
         {isSelf && (
-          <div className="mb-6 p-4 rounded-xl bg-purple-50 border border-purple-200 text-purple-900 text-xs flex items-start gap-3">
-            <Lock className="w-4 h-4 text-purple-700 shrink-0 mt-0.5" />
+          <div className="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-start gap-3">
+            <Lock className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
             <div>
-              <strong className="font-bold block">Proteksi Akun Sendiri (PRD 4.15):</strong>
+              <strong className="font-bold block">Proteksi Akun Sendiri:</strong>
               <span className="leading-relaxed block mt-0.5">
                 Anda sedang membuka akun Super Admin Anda sendiri. Sistem secara otomatis mengunci opsi penurunan peran dan penonaktifan akun demi mencegah penguncian sistem.
               </span>
@@ -300,14 +300,14 @@ export default function RincianPenggunaAdminDetailPage({ params }) {
             </div>
           </div>
 
-          {/* Pemilihan Peran Baru Sesuai PRD 4.15 */}
+          {/* Pemilihan Peran Baru */}
           <div>
             <label className="block text-xs font-bold text-[#1F2937] uppercase tracking-wider mb-2 flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <Shield className="w-4 h-4 text-[#EA580C]" /> Tetapkan Peran Akun*
               </span>
               {isSelf && (
-                <span className="text-[10px] text-purple-700 font-bold normal-case bg-purple-100 px-2 py-0.5 rounded">
+                <span className="text-[10px] text-amber-800 font-bold normal-case bg-amber-100 px-2 py-0.5 rounded">
                   Terkunci (Akun Sendiri)
                 </span>
               )}
@@ -327,7 +327,7 @@ export default function RincianPenggunaAdminDetailPage({ params }) {
               <option value="super_admin">Super Admin (Hak Akses Penuh ke Seluruh Modul)</option>
             </select>
             <p className="text-[11px] text-[#5A6B78] mt-1.5 leading-relaxed">
-              Sesuai PRD 4.15: Pilihan peran valid hanya <code>siswa</code>, <code>staf</code>, <code>tutor</code>, atau <code>super_admin</code>. Ketika peran diubah ke tutor, pengguna akan otomatis diarahkan ke dasbor tutor saat login kembali.
+              Pilihan peran valid: <code>siswa</code>, <code>staf</code>, <code>tutor</code>, atau <code>super_admin</code>. Pengguna akan otomatis diarahkan ke dasbor perannya saat login.
             </p>
           </div>
 

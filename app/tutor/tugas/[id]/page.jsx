@@ -171,7 +171,7 @@ export default function TugasDanNilaiTutorDetailPage({ params }) {
                 const currentScore = scores[sub.siswaId] || { nilai: "", komentar: "" };
                 const isGraded = sub.nilai !== null;
                 const student = mockUsers.find((u) => u.id === sub.siswaId || u.nama === sub.siswaNama);
-                const avatarUrl = student?.avatar || "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&q=80";
+                const avatarUrl = student?.avatar || "/avatars/default_user.svg";
 
                 return (
                   <tr key={sub.siswaId} className="hover:bg-slate-50/80 transition">

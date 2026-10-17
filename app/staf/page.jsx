@@ -1,29 +1,42 @@
+"use client";
+
 import Link from "next/link";
 import { ClipboardCheck, Calendar, ArrowRight, Clock, MapPin, User } from "lucide-react";
 import { mockKelas, mockPendaftaran } from "@/lib/mockData";
+import { useAuth } from "@/components/AuthProvider";
 
 export default function DasborStafPage() {
+  const { user, userProfile } = useAuth();
+  const userEmail = String(userProfile?.email || user?.email || "").toLowerCase();
+  const displayName = 
+    userProfile?.nama || 
+    (userEmail.includes("fira") ? "Kak Fira" : 
+     user?.displayName || 
+     user?.email?.split("@")[0] || 
+     "Staf Administrasi");
+  const avatarUrl = userProfile?.avatar || user?.photoURL || "/avatars/default_user.svg";
   const pendingCount = mockPendaftaran.filter((p) => p.status === "menunggu").length;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      {/* Panel Staf Administrasi Sesuai PRD 5.1 & Tema Terang */}
+      {/* Panel Staf Administrasi */}
       <div className="panel bg-white border border-[#E5E7EB] mb-8 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-[#E5E7EB] shrink-0">
               <img
-                src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80"
-                alt="Kak Fira Administrasi"
+                src={avatarUrl}
+                alt={displayName}
                 className="w-full h-full object-cover"
               />
+              <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#15A66A] border-2 border-white rounded-full"></span>
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-extrabold text-[#1F2937] tracking-tight">
-                Dasbor Staf Administrasi
+                Selamat Datang, {displayName}!
               </h1>
               <p className="text-xs sm:text-sm text-[#5A6B78] mt-1 max-w-xl">
-                Selamat bertugas, <strong>Kak Fira</strong>. Pantau verifikasi pendaftaran masuk, koordinasi jadwal kelas, dan data siswa.
+                Dasbor Staf Administrasi · Pantau verifikasi pendaftaran masuk, koordinasi jadwal kelas, dan data siswa.
               </p>
             </div>
           </div>

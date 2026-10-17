@@ -46,7 +46,7 @@ export default function KelasSayaDaftarPage() {
                 {/* Informasi Tutor */}
                 <div className="flex items-center gap-3 p-3 bg-[#F7F5F2] rounded-lg border border-[#E5E7EB] mb-4">
                   <img
-                    src={kelas.tutorAvatar || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop"}
+                    src={kelas.tutorAvatar || "/avatars/kak_dimas.jpg"}
                     alt={kelas.tutorNama}
                     className="w-9 h-9 rounded-full object-cover border border-[#E5E7EB]"
                   />

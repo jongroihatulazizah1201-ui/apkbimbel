@@ -1,26 +1,35 @@
+"use client";
+
 import Link from "next/link";
 import { Calendar, Clock, MapPin, Users, ArrowRight } from "lucide-react";
-import { mockKelas, mockUsers } from "@/lib/mockData";
+import { mockKelas } from "@/lib/mockData";
+import { useAuth } from "@/components/AuthProvider";
 
 export default function DasborTutorPage() {
-  // Simulasi tutor Kak Dimas (user-4)
+  const { user, userProfile } = useAuth();
+  const userEmail = String(userProfile?.email || user?.email || "").toLowerCase();
+  const displayName = 
+    userProfile?.nama || 
+    (userEmail.includes("dimas") ? "Kak Dimas" : 
+     userEmail.includes("nadia") ? "Kak Nadia" : 
+     user?.displayName || 
+     user?.email?.split("@")[0] || 
+     "Tutor");
+  const avatarUrl = userProfile?.avatar || user?.photoURL || "/avatars/default_user.svg";
+
   const myClasses = mockKelas;
   const todayClass = myClasses[0];
-  const tutorInfo = mockUsers.find(u => u.id === "user-4") || { 
-    nama: "Kak Dimas", 
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=300&auto=format&fit=crop" 
-  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      {/* Panel Tutor Sesuai PRD 5.1 & Tema Terang */}
+      {/* Panel Tutor */}
       <div className="panel bg-white border border-[#E5E7EB] mb-8 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <div className="relative shrink-0">
               <img
-                src={tutorInfo.avatar}
-                alt={tutorInfo.nama}
+                src={avatarUrl}
+                alt={displayName}
                 className="w-14 h-14 rounded-full object-cover border-2 border-[#E5E7EB]"
               />
               <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#15A66A] border-2 border-white rounded-full"></span>
@@ -28,10 +37,10 @@ export default function DasborTutorPage() {
 
             <div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1F2937] tracking-tight">
-                Dasbor Tutor
+                Selamat Datang, {displayName}!
               </h1>
               <p className="text-xs sm:text-sm text-[#5A6B78] mt-1">
-                Selamat mengajar, <strong>{tutorInfo.nama}</strong>. Kelola sesi tatap muka, tautan materi, presensi, dan penilaian tugas siswa.
+                Dasbor Tutor · Kelola sesi tatap muka, tautan materi, presensi, dan penilaian tugas siswa.
               </p>
             </div>
           </div>

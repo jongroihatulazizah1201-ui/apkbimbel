@@ -66,7 +66,7 @@ export default function DataSiswaStafPage() {
                       <div className="flex items-center gap-3">
                         <div className="relative w-8 h-8 rounded-full overflow-hidden border border-slate-200 shrink-0">
                           <Image
-                            src={s.avatar || "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&q=80"}
+                            src={s.avatar || "/avatars/default_user.svg"}
                             alt={s.nama}
                             fill
                             className="object-cover"

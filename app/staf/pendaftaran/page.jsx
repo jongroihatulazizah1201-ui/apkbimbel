@@ -5,8 +5,11 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Check, X, Clock, AlertCircle, CheckCircle2, MessageSquare, Filter } from "lucide-react";
 import { mockPendaftaran, mockUsers } from "@/lib/mockData";
+import { useAuth } from "@/components/AuthProvider";
 
 function PendaftaranContent() {
+  const { user, userProfile } = useAuth();
+  const staffName = userProfile?.nama || user?.displayName || "Staf Administrasi";
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialFilter = searchParams.get("status") || "semua";
@@ -33,7 +36,7 @@ function PendaftaranContent() {
   };
 
   const handleApprove = (id) => {
-    setList(list.map((item) => (item.id === id ? { ...item, status: "aktif", catatanStaf: "Disetujui oleh Kak Fira (Staf)" } : item)));
+    setList(list.map((item) => (item.id === id ? { ...item, status: "aktif", catatanStaf: `Disetujui oleh ${staffName}` } : item)));
     setSuccessMsg("Pendaftaran siswa berhasil disetujui! Status berubah menjadi Aktif.");
     setTimeout(() => setSuccessMsg(""), 4000);
   };
@@ -132,7 +135,7 @@ function PendaftaranContent() {
               ) : (
                 filteredList.map((item) => {
                   const student = mockUsers.find((u) => u.id === item.siswaId);
-                  const avatarUrl = student?.avatar || "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&q=80";
+                  const avatarUrl = student?.avatar || "/avatars/default_user.svg";
 
                   return (
                     <tr key={item.id} className="hover:bg-slate-50/80 transition">

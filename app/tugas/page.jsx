@@ -21,7 +21,7 @@ export default function DaftarTugasSiswaPage() {
       {/* Header */}
       <div className="mb-8">
         <div className="text-xs font-bold uppercase tracking-wider text-[#EA580C] mb-1">
-          Modul Siswa · PRD 4.5
+          Modul Siswa
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1F2937] tracking-tight">
           Tugas Belajar Saya

@@ -1,8 +1,22 @@
+"use client";
+
 import Link from "next/link";
-import { Users, UserPlus, Award, BarChart3, BookOpen, ArrowRight, ShieldCheck, ClipboardCheck, GraduationCap } from "lucide-react";
-import { mockUsers, mockPendaftaran, mockPrograms } from "@/lib/mockData";
+import { Users, UserPlus, Award, BarChart3, BookOpen, ArrowRight, ShieldCheck } from "lucide-react";
+import { mockUsers, mockPendaftaran } from "@/lib/mockData";
+import { useAuth } from "@/components/AuthProvider";
 
 export default function DasborSuperAdminPage() {
+  const { user, userProfile } = useAuth();
+  const userEmail = String(userProfile?.email || user?.email || "").toLowerCase();
+  const displayName = 
+    userProfile?.nama || 
+    (userEmail.includes("arif") ? "Pak Arif" : 
+     userEmail.includes("superadmin") ? "Super Admin" :
+     user?.displayName || 
+     user?.email?.split("@")[0] || 
+     "Super Admin");
+  const avatarUrl = userProfile?.avatar || user?.photoURL || "/avatars/default_user.svg";
+
   const totalStudents = mockUsers.filter((u) => u.role === "siswa").length;
   const activeRegistrations = mockPendaftaran.filter((p) => p.status === "aktif").length;
 
@@ -14,8 +28,8 @@ export default function DasborSuperAdminPage() {
           <div className="flex items-center gap-4">
             <div className="relative shrink-0">
               <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300&auto=format&fit=crop"
-                alt="Pak Arif - Super Admin"
+                src={avatarUrl}
+                alt={displayName}
                 className="w-14 h-14 rounded-full object-cover border-2 border-[#E5E7EB]"
               />
               <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#15A66A] border-2 border-white rounded-full"></span>
@@ -23,10 +37,10 @@ export default function DasborSuperAdminPage() {
 
             <div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1F2937] tracking-tight">
-                Dasbor Super Admin
+                Selamat Datang, {displayName}!
               </h1>
               <p className="text-xs sm:text-sm text-[#5A6B78] mt-1">
-                Selamat bertugas, <strong>Pak Arif</strong>. Pantau pertumbuhan siswa, presensi tatap muka, dan laporan bimbel.
+                Dasbor Super Admin · Pantau pertumbuhan siswa, presensi tatap muka, dan laporan bimbel.
               </p>
             </div>
           </div>
@@ -124,7 +138,7 @@ export default function DasborSuperAdminPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         <div className="panel flex flex-col justify-between">
           <div>
-            <div className="w-10 h-10 rounded-lg bg-[#FAF5FF] text-[#9333EA] flex items-center justify-center mb-3 border border-purple-200">
+            <div className="w-10 h-10 rounded-lg bg-[#F7F5F2] text-[#1F2937] flex items-center justify-center mb-3 border border-[#E5E7EB]">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-base text-[#1F2937] mb-1">Kelola Pengguna</h3>
@@ -168,115 +182,6 @@ export default function DasborSuperAdminPage() {
             <span>Buka Laporan</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
-        </div>
-      </div>
-
-      {/* Akses Cepat Seluruh Modul Sistem (PRD 2.3 & 3.1) */}
-      <div className="panel bg-[#F7F5F2] border border-[#E5E7EB]">
-        <div className="mb-5">
-          <h2 className="text-base font-bold text-[#1F2937] tracking-tight">
-            Akses Terpadu Seluruh Modul (PRD Bab 4)
-          </h2>
-          <p className="text-xs text-[#5A6B78] mt-0.5">
-            Sebagai Super Admin, Anda memiliki hak penuh untuk menginspeksi langsung operasional Staf, Tutor, dan Siswa.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Modul Staf */}
-          <div className="bg-white border border-[#E5E7EB] rounded-lg p-4 shadow-sm flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-md bg-sky-50 text-sky-700 flex items-center justify-center font-bold">
-                  <ClipboardCheck className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-xs text-[#1F2937]">Modul Staf</h3>
-                  <span className="text-[10px] text-[#5A6B78]">Pendaftaran & Jadwal</span>
-                </div>
-              </div>
-              <div className="space-y-1.5 text-xs">
-                <Link href="/staf" className="flex items-center justify-between p-2 rounded bg-[#F7F5F2] hover:bg-orange-50 hover:text-[#EA580C] text-[#1F2937] font-medium transition">
-                  <span>Dasbor Staf</span>
-                  <ArrowRight className="w-3 h-3 text-[#5A6B78]" />
-                </Link>
-                <Link href="/staf/pendaftaran" className="flex items-center justify-between p-2 rounded bg-[#F7F5F2] hover:bg-orange-50 hover:text-[#EA580C] text-[#1F2937] font-medium transition">
-                  <span>Verifikasi Pendaftaran</span>
-                  <ArrowRight className="w-3 h-3 text-[#5A6B78]" />
-                </Link>
-                <Link href="/staf/kelas" className="flex items-center justify-between p-2 rounded bg-[#F7F5F2] hover:bg-orange-50 hover:text-[#EA580C] text-[#1F2937] font-medium transition">
-                  <span>Kelola Jadwal & Presensi</span>
-                  <ArrowRight className="w-3 h-3 text-[#5A6B78]" />
-                </Link>
-                <Link href="/staf/siswa" className="flex items-center justify-between p-2 rounded bg-[#F7F5F2] hover:bg-orange-50 hover:text-[#EA580C] text-[#1F2937] font-medium transition">
-                  <span>Basis Data Siswa</span>
-                  <ArrowRight className="w-3 h-3 text-[#5A6B78]" />
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Modul Tutor */}
-          <div className="bg-white border border-[#E5E7EB] rounded-lg p-4 shadow-sm flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-md bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
-                  <GraduationCap className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-xs text-[#1F2937]">Modul Tutor</h3>
-                  <span className="text-[10px] text-[#5A6B78]">Pengajaran & Tugas</span>
-                </div>
-              </div>
-              <div className="space-y-1.5 text-xs">
-                <Link href="/tutor" className="flex items-center justify-between p-2 rounded bg-[#F7F5F2] hover:bg-orange-50 hover:text-[#EA580C] text-[#1F2937] font-medium transition">
-                  <span>Dasbor Tutor</span>
-                  <ArrowRight className="w-3 h-3 text-[#5A6B78]" />
-                </Link>
-                <Link href="/tutor/kelas" className="flex items-center justify-between p-2 rounded bg-[#F7F5F2] hover:bg-orange-50 hover:text-[#EA580C] text-[#1F2937] font-medium transition">
-                  <span>Daftar Kelas Diajar</span>
-                  <ArrowRight className="w-3 h-3 text-[#5A6B78]" />
-                </Link>
-                <Link href="/tutor/tugas" className="flex items-center justify-between p-2 rounded bg-[#F7F5F2] hover:bg-orange-50 hover:text-[#EA580C] text-[#1F2937] font-medium transition">
-                  <span>Evaluasi & Nilai Tugas</span>
-                  <ArrowRight className="w-3 h-3 text-[#5A6B78]" />
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Modul Siswa */}
-          <div className="bg-white border border-[#E5E7EB] rounded-lg p-4 shadow-sm flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-md bg-orange-50 text-orange-700 flex items-center justify-center font-bold">
-                  <BookOpen className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-xs text-[#1F2937]">Modul Siswa</h3>
-                  <span className="text-[10px] text-[#5A6B78]">Portal Belajar</span>
-                </div>
-              </div>
-              <div className="space-y-1.5 text-xs">
-                <Link href="/beranda" className="flex items-center justify-between p-2 rounded bg-[#F7F5F2] hover:bg-orange-50 hover:text-[#EA580C] text-[#1F2937] font-medium transition">
-                  <span>Beranda Siswa</span>
-                  <ArrowRight className="w-3 h-3 text-[#5A6B78]" />
-                </Link>
-                <Link href="/program" className="flex items-center justify-between p-2 rounded bg-[#F7F5F2] hover:bg-orange-50 hover:text-[#EA580C] text-[#1F2937] font-medium transition">
-                  <span>Katalog Program Bimbel</span>
-                  <ArrowRight className="w-3 h-3 text-[#5A6B78]" />
-                </Link>
-                <Link href="/kelas" className="flex items-center justify-between p-2 rounded bg-[#F7F5F2] hover:bg-orange-50 hover:text-[#EA580C] text-[#1F2937] font-medium transition">
-                  <span>Kelas Saya</span>
-                  <ArrowRight className="w-3 h-3 text-[#5A6B78]" />
-                </Link>
-                <Link href="/tugas" className="flex items-center justify-between p-2 rounded bg-[#F7F5F2] hover:bg-orange-50 hover:text-[#EA580C] text-[#1F2937] font-medium transition">
-                  <span>Daftar Tugas Siswa</span>
-                  <ArrowRight className="w-3 h-3 text-[#5A6B78]" />
-                </Link>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

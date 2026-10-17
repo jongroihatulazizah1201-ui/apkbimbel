@@ -25,7 +25,7 @@ export default async function RincianKelasSiswaPage({ params }) {
   }
 
   const tutorUser = mockUsers.find((u) => u.id === kelas.tutorId || u.nama === kelas.tutorNama);
-  const tutorAvatar = tutorUser?.avatar || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80";
+  const tutorAvatar = tutorUser?.avatar || "/avatars/kak_dimas.jpg";
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">

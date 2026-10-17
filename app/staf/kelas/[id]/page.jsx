@@ -127,7 +127,7 @@ export default function RincianKelasStafDetailPage({ params }) {
             <tbody className="divide-y divide-slate-100">
               {siswaList.map((siswa) => {
                 const userObj = mockUsers.find((u) => u.id === siswa.id || u.nama === siswa.nama);
-                const avatarUrl = userObj?.avatar || "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&q=80";
+                const avatarUrl = userObj?.avatar || "/avatars/default_user.svg";
 
                 return (
                   <tr key={siswa.id} className="hover:bg-slate-50/80 transition">
@@ -181,7 +181,7 @@ export default function RincianKelasStafDetailPage({ params }) {
                     />
                     <div className="relative w-8 h-8 rounded-full overflow-hidden border border-slate-200 shrink-0">
                       <Image
-                        src={cand.avatar || "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&q=80"}
+                        src={cand.avatar || "/avatars/default_user.svg"}
                         alt={cand.nama}
                         fill
                         className="object-cover"

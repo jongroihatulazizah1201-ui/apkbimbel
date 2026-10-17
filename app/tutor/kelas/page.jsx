@@ -14,7 +14,7 @@ export default function DaftarKelasYangDiajarTutorPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
           <div className="text-xs font-bold uppercase tracking-wider text-[#EA580C] mb-1">
-            Modul Tutor · PRD 4.12
+            Modul Tutor
           </div>
           <h1 className="text-2xl md:text-3xl font-extrabold text-[#1F2937] tracking-tight">
             Kelas yang Diajar

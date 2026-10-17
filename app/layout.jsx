@@ -17,10 +17,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="id" className={inter.variable} suppressHydrationWarning>
-      <body className="min-h-screen bg-app-bg text-app-text flex flex-col antialiased" suppressHydrationWarning>
+      <body className="min-h-screen bg-app-bg text-app-text antialiased" suppressHydrationWarning>
         <AuthProvider>
-          <Navbar />
-          <main className="flex-1 pb-16">{children}</main>
+          <div className="min-h-screen flex flex-col lg:flex-row bg-[#F7F5F2]">
+            <Navbar />
+            <div className="flex-1 flex flex-col min-w-0">
+              <main className="flex-1 pb-16">{children}</main>
+            </div>
+          </div>
         </AuthProvider>
       </body>
     </html>

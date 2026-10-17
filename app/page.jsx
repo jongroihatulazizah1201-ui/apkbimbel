@@ -162,7 +162,7 @@ export default function HomePage() {
               Akses Cepat Modul Berdasarkan Peran
             </h2>
             <p className="text-sm text-[#5A6B78] mt-2">
-              Sesuai ketentuan pengujian, silakan pilih rute di bawah ini atau gunakan bilah atas untuk beralih peran secara langsung.
+              Pilih portal peran di bawah ini untuk mengakses ruang belajar, administrasi bimbingan, atau manajemen pengajaran.
             </p>
           </div>
 
@@ -227,7 +227,7 @@ export default function HomePage() {
             {/* Super Admin */}
             <div className="panel flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-lg bg-[#FAF5FF] text-[#9333EA] flex items-center justify-center font-bold mb-3 border border-purple-200">
+                <div className="w-10 h-10 rounded-lg bg-[#F7F5F2] text-[#1F2937] flex items-center justify-center font-bold mb-3 border border-[#E5E7EB]">
                   <ShieldCheck className="w-5 h-5" />
                 </div>
                 <h3 className="font-bold text-base text-[#1F2937] mb-1">Super Admin</h3>

@@ -26,6 +26,7 @@ export default function AuthProvider({ children }) {
     let unsubscribeProfile = null;
 
     const unsubscribeAuth = onAuthStateChanged(auth, async (currentUser) => {
+      setLoading(true);
       setUser(currentUser);
 
       if (currentUser) {
@@ -95,8 +96,14 @@ export default function AuthProvider({ children }) {
       await signOut(auth);
       setUser(null);
       setUserProfile(null);
+      if (typeof window !== "undefined") {
+        window.location.href = "/masuk";
+      }
     } catch (err) {
       console.error("Sign out error:", err);
+      if (typeof window !== "undefined") {
+        window.location.href = "/masuk";
+      }
     }
   };
 

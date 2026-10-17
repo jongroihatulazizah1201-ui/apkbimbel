@@ -24,12 +24,28 @@ export default function DaftarPage() {
 
   // Pengguna yang sudah masuk lalu membuka /daftar langsung diarahkan ke halaman perannya masing-masing
   useEffect(() => {
-    if (!authLoading && authUser) {
-      const targetRole = authProfile?.role || "siswa";
-      const targetPath = getRoleRedirectPath(targetRole);
-      router.replace(targetPath);
-    }
-  }, [authUser, authProfile, authLoading, router]);
+    if (isSubmitting) return;
+    if (authLoading) return;
+    if (!authUser) return;
+
+    const userEmail = String(authProfile?.email || authUser.email || "").toLowerCase();
+    const isPakArif = userEmail === "arif.bimbel@langkahjuara.id" || userEmail === "arif@langkahjuara.id";
+    const isKakFira = userEmail.includes("fira");
+    const isKakDimas = userEmail.includes("dimas");
+    const isKakNadia = userEmail.includes("nadia");
+
+    const effectiveRole = authProfile?.role || (
+      isPakArif ? "super_admin" :
+      isKakFira ? "staf" :
+      (isKakDimas || isKakNadia) ? "tutor" :
+      null
+    );
+
+    if (!effectiveRole) return;
+
+    const targetPath = getRoleRedirectPath(effectiveRole);
+    router.replace(targetPath);
+  }, [authUser, authProfile, authLoading, isSubmitting, router]);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -341,7 +357,7 @@ export default function DaftarPage() {
 
               <div className="flex items-center gap-3 pt-3.5 mt-3.5 border-t border-[#E5E7EB]">
                 <img
-                  src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop"
+                  src="/avatars/kak_dimas.jpg"
                   alt="Kak Dimas - Tutor Langkah Juara"
                   className="w-9 h-9 rounded-full object-cover border border-[#E5E7EB]"
                 />

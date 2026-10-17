@@ -20,14 +20,37 @@ export default function MasukPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Pengguna yang sudah masuk lalu membuka /masuk langsung diarahkan ke halaman perannya masing-masing
+  // Pengguna yang sudah masuk lalu membuka /masuk diarahkan ke halaman perannya masing-masing
   useEffect(() => {
-    if (!authLoading && authUser) {
-      const targetRole = authProfile?.role || "siswa";
-      const targetPath = getRoleRedirectPath(targetRole);
-      router.replace(targetPath);
-    }
-  }, [authUser, authProfile, authLoading, router]);
+    if (isSubmitting) return; // Jangan interupsi saat proses login sedang berjalan
+    if (authLoading) return;
+    if (!authUser) return;
+
+    const userEmail = String(authProfile?.email || authUser.email || "").toLowerCase();
+    const isSuperAdmin = 
+      userEmail === "arif.bimbel@langkahjuara.id" || 
+      userEmail === "arif@langkahjuara.id" || 
+      userEmail === "superadmin@langkahjuara.id" ||
+      userEmail.includes("superadmin") || 
+      userEmail.includes("super_admin") || 
+      userEmail.includes("arif");
+    const isKakFira = userEmail.includes("fira");
+    const isKakDimas = userEmail.includes("dimas");
+    const isKakNadia = userEmail.includes("nadia");
+
+    const effectiveRole = authProfile?.role || (
+      isSuperAdmin ? "super_admin" :
+      isKakFira ? "staf" :
+      (isKakDimas || isKakNadia) ? "tutor" :
+      null
+    );
+
+    // Jangan lakukan pengalihan jika profil belum selesai dimuat dan belum pasti perannya
+    if (!effectiveRole) return;
+
+    const targetPath = getRoleRedirectPath(effectiveRole);
+    router.replace(targetPath);
+  }, [authUser, authProfile, authLoading, isSubmitting, router]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -52,16 +75,33 @@ export default function MasukPage() {
         }
       }
 
-      // Setelah pengguna berhasil masuk: cek dokumen users/{uid}. Bila belum ada, buat dokumen sesuai PRD 7.1 dan role "siswa". Bila sudah ada, jangan diubah. Jangan simpan kata sandi.
+      // Setelah pengguna berhasil masuk: cek dokumen users/{uid}
       if (loggedUser) {
+        const userEmail = String(loggedUser.email || email || "").toLowerCase();
         const profileResult = await ensureUserProfile(loggedUser, { email: email.trim() });
-        const userRole = profileResult?.data?.role || "siswa";
+        const isSuperAdminLogin = 
+          userEmail === "arif.bimbel@langkahjuara.id" || 
+          userEmail === "arif@langkahjuara.id" || 
+          userEmail === "superadmin@langkahjuara.id" ||
+          userEmail.includes("superadmin") || 
+          userEmail.includes("super_admin") || 
+          userEmail.includes("arif");
+        const userRole = profileResult?.data?.role || (
+          isSuperAdminLogin ? "super_admin" :
+          userEmail.includes("fira") ? "staf" :
+          (userEmail.includes("dimas") || userEmail.includes("nadia")) ? "tutor" :
+          "siswa"
+        );
         const targetPath = getRoleRedirectPath(userRole);
-        router.push(targetPath);
+        if (typeof window !== "undefined") {
+          window.location.href = targetPath;
+        } else {
+          router.replace(targetPath);
+        }
         return;
       }
 
-      router.push("/beranda");
+      router.replace("/beranda");
     } catch (err) {
       console.error("Login error:", err);
       setErrorMessage("Gagal masuk: " + (err.message || "Terjadi kendala jaringan."));
@@ -76,11 +116,27 @@ export default function MasukPage() {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      // Setelah pengguna berhasil masuk via Google: cek dokumen users/{uid}. Bila belum ada, buat dokumen sesuai PRD 7.1 dan role "siswa". Bila sudah ada, jangan diubah.
+      const userEmail = String(user.email || "").toLowerCase();
       const profileResult = await ensureUserProfile(user);
-      const userRole = profileResult?.data?.role || "siswa";
+      const isSuperAdminGoogle = 
+        userEmail === "arif.bimbel@langkahjuara.id" || 
+        userEmail === "arif@langkahjuara.id" || 
+        userEmail === "superadmin@langkahjuara.id" ||
+        userEmail.includes("superadmin") || 
+        userEmail.includes("super_admin") || 
+        userEmail.includes("arif");
+      const userRole = profileResult?.data?.role || (
+        isSuperAdminGoogle ? "super_admin" :
+        userEmail.includes("fira") ? "staf" :
+        (userEmail.includes("dimas") || userEmail.includes("nadia")) ? "tutor" :
+        "siswa"
+      );
       const targetPath = getRoleRedirectPath(userRole);
-      router.push(targetPath);
+      if (typeof window !== "undefined") {
+        window.location.href = targetPath;
+      } else {
+        router.replace(targetPath);
+      }
     } catch (err) {
       console.error("Google sign in error:", err);
       if (err.code !== "auth/popup-closed-by-user") {
@@ -92,15 +148,32 @@ export default function MasukPage() {
 
   // Tampilkan layar pengalihan bila pengguna sudah aktif dalam sesi login
   if (!authLoading && authUser) {
-    const userRole = authProfile?.role || "siswa";
-    const targetPath = getRoleRedirectPath(userRole);
+    const userEmail = String(authProfile?.email || authUser.email || "").toLowerCase();
+    const isSuperAdminActive = 
+      userEmail === "arif.bimbel@langkahjuara.id" || 
+      userEmail === "arif@langkahjuara.id" || 
+      userEmail === "superadmin@langkahjuara.id" ||
+      userEmail.includes("superadmin") || 
+      userEmail.includes("super_admin") || 
+      userEmail.includes("arif");
+    const isKakFira = userEmail.includes("fira");
+    const isKakDimas = userEmail.includes("dimas");
+    const isKakNadia = userEmail.includes("nadia");
+
+    const effectiveRole = authProfile?.role || (
+      isSuperAdminActive ? "super_admin" :
+      isKakFira ? "staf" :
+      (isKakDimas || isKakNadia) ? "tutor" :
+      "siswa"
+    );
+    const targetPath = getRoleRedirectPath(effectiveRole);
     return (
       <div className="min-h-[85vh] flex items-center justify-center px-4 py-8 bg-[#F7F5F2]">
         <div className="bg-white p-8 rounded-3xl border border-[#E5E7EB] shadow-sm text-center max-w-md w-full">
           <Loader2 className="w-8 h-8 animate-spin text-[#EA580C] mx-auto mb-4" />
           <h2 className="text-lg font-bold text-[#1F2937]">Mengarahkan ke Portal...</h2>
           <p className="text-xs text-[#5A6B78] mt-1.5 leading-relaxed">
-            Anda telah masuk sebagai <strong className="text-[#1F2937] capitalize">{userRole.replace("_", " ")}</strong>. Sedang mengarahkan ke <span className="font-mono text-[#EA580C]">{targetPath}</span>...
+            Anda telah masuk sebagai <strong className="text-[#1F2937] capitalize">{effectiveRole.replace("_", " ")}</strong>. Sedang mengarahkan ke <span className="font-mono text-[#EA580C]">{targetPath}</span>...
           </p>
         </div>
       </div>
@@ -110,7 +183,69 @@ export default function MasukPage() {
   return (
     <div className="min-h-[85vh] flex items-center justify-center px-4 py-8 sm:py-12 bg-[#F7F5F2]">
       <div className="max-w-5xl w-full bg-white rounded-3xl border border-[#E5E7EB] shadow-sm overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[620px]">
-        {/* Kolom Kiri: Formulir Masuk (Nixtio Minimalist Auth Style) */}
+        {/* Kolom Kiri: Left-side Bar Showcase Visual (Branding & Testimoni) */}
+        <div className="hidden lg:flex lg:col-span-5 p-4 bg-[#F7F5F2] flex-col">
+          <div className="relative w-full h-full rounded-2xl overflow-hidden bg-stone-900 flex flex-col justify-between p-7 text-white">
+            {/* Foto Belajar Realistis */}
+            <img
+              src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1000&auto=format&fit=crop"
+              alt="Sesi Belajar Langkah Juara"
+              className="absolute inset-0 w-full h-full object-cover opacity-60"
+            />
+            {/* Overlay Gradien Hangat */}
+            <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-900/60 to-stone-900/40"></div>
+
+            {/* Konten Atas */}
+            <div className="relative z-10">
+              <span className="text-[11px] font-bold text-orange-300 uppercase tracking-wider block mb-1">
+                Metode Belajar Terpandu
+              </span>
+              <h2 className="text-xl font-extrabold text-white leading-tight">
+                Fasilitas Tatap Muka & Bimbingan Terfokus
+              </h2>
+            </div>
+
+            {/* Floating Review/Testimonial Card (Ciri Khas Nixtio) */}
+            <div className="relative z-10 bg-white/95 backdrop-blur-md rounded-2xl p-5 border border-white/20 shadow-xl text-[#1F2937]">
+              <div className="flex items-center gap-1 text-[#F59E0B] mb-2.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-3.5 h-3.5 fill-current" />
+                ))}
+                <span className="text-xs font-bold text-[#1F2937] ml-1.5 tabular-nums">5.0</span>
+              </div>
+
+              <p className="text-xs text-[#1F2937] font-medium leading-relaxed mb-4">
+                "Materi latihan UTBK di Langkah Juara sangat membantu meningkatkan skor tryout saya. Tutornya ramah dan penjelasannya mudah dipahami."
+              </p>
+
+              <div className="flex items-center gap-3 pt-3 border-t border-[#E5E7EB]">
+                <img
+                  src="/avatars/raka.jpg"
+                  alt="Raka Pratama"
+                  className="w-9 h-9 rounded-full object-cover border border-[#E5E7EB]"
+                />
+                <div>
+                  <h3 className="font-bold text-xs text-[#1F2937]">Raka Pratama</h3>
+                  <p className="text-[11px] text-[#5A6B78]">Siswa Intensif UTBK Makassar</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Statistik Bawah */}
+            <div className="relative z-10 grid grid-cols-2 gap-4 pt-2">
+              <div>
+                <div className="text-xl font-extrabold text-white tabular-nums">94%</div>
+                <div className="text-[11px] text-stone-300 font-medium">Lolos PTN Favorit</div>
+              </div>
+              <div>
+                <div className="text-xl font-extrabold text-orange-400 tabular-nums">1:8</div>
+                <div className="text-[11px] text-stone-300 font-medium">Rasio Tutor Siswa</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Kolom Kanan: Formulir Masuk (Login di Kanan) */}
         <div className="lg:col-span-7 p-6 sm:p-10 xl:p-12 flex flex-col justify-between bg-white">
           {/* Header Identitas Brand */}
           <div>
@@ -260,68 +395,6 @@ export default function MasukPage() {
             <Link href="/daftar" className="text-[#EA580C] font-bold hover:underline ml-0.5">
               Daftar siswa baru sekarang
             </Link>
-          </div>
-        </div>
-
-        {/* Kolom Kanan: Showcase Visual Nixtio-Style (Foto & Floating Testimonial Card) */}
-        <div className="hidden lg:flex lg:col-span-5 p-4 bg-[#F7F5F2] flex-col">
-          <div className="relative w-full h-full rounded-2xl overflow-hidden bg-stone-900 flex flex-col justify-between p-7 text-white">
-            {/* Foto Belajar Realistis */}
-            <img
-              src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1000&auto=format&fit=crop"
-              alt="Sesi Belajar Langkah Juara"
-              className="absolute inset-0 w-full h-full object-cover opacity-60"
-            />
-            {/* Overlay Gradien Hangat */}
-            <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-900/60 to-stone-900/40"></div>
-
-            {/* Konten Atas */}
-            <div className="relative z-10">
-              <span className="text-[11px] font-bold text-orange-300 uppercase tracking-wider block mb-1">
-                Metode Belajar Terpandu
-              </span>
-              <h2 className="text-xl font-extrabold text-white leading-tight">
-                Fasilitas Tatap Muka & Bimbingan Terfokus
-              </h2>
-            </div>
-
-            {/* Floating Review/Testimonial Card (Ciri Khas Nixtio) */}
-            <div className="relative z-10 bg-white/95 backdrop-blur-md rounded-2xl p-5 border border-white/20 shadow-xl text-[#1F2937]">
-              <div className="flex items-center gap-1 text-[#F59E0B] mb-2.5">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 fill-current" />
-                ))}
-                <span className="text-xs font-bold text-[#1F2937] ml-1.5 tabular-nums">5.0</span>
-              </div>
-
-              <p className="text-xs text-[#1F2937] font-medium leading-relaxed mb-4">
-                "Materi latihan UTBK di Langkah Juara sangat membantu meningkatkan skor tryout saya. Tutornya ramah dan penjelasannya mudah dipahami."
-              </p>
-
-              <div className="flex items-center gap-3 pt-3 border-t border-[#E5E7EB]">
-                <img
-                  src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=200&auto=format&fit=crop"
-                  alt="Raka Pratama"
-                  className="w-9 h-9 rounded-full object-cover border border-[#E5E7EB]"
-                />
-                <div>
-                  <h3 className="font-bold text-xs text-[#1F2937]">Raka Pratama</h3>
-                  <p className="text-[11px] text-[#5A6B78]">Siswa Intensif UTBK Makassar</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Statistik Bawah */}
-            <div className="relative z-10 grid grid-cols-2 gap-4 pt-2">
-              <div>
-                <div className="text-xl font-extrabold text-white tabular-nums">94%</div>
-                <div className="text-[11px] text-stone-300 font-medium">Lolos PTN Favorit</div>
-              </div>
-              <div>
-                <div className="text-xl font-extrabold text-orange-400 tabular-nums">1:8</div>
-                <div className="text-[11px] text-stone-300 font-medium">Rasio Tutor Siswa</div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

@@ -19,8 +19,20 @@ export default function AdminLayout({ children }) {
   const router = useRouter();
   const { user, userProfile, loading } = useAuth();
 
+  const userEmail = String(userProfile?.email || user?.email || "").toLowerCase();
+  const isSuperAdmin = 
+    userEmail === "arif.bimbel@langkahjuara.id" || 
+    userEmail === "arif@langkahjuara.id" || 
+    userEmail === "superadmin@langkahjuara.id" ||
+    userEmail.includes("superadmin") || 
+    userEmail.includes("super_admin") || 
+    userEmail.includes("arif");
+  const currentRole = String(userProfile?.role || (isSuperAdmin ? "super_admin" : "")).trim().toLowerCase();
+
   // Selama role belum selesai dibaca dari users/{uid}, jangan memutuskan apa pun
-  const isRolePending = loading || (Boolean(user) && !userProfile?.role);
+  const isRolePending = loading || (Boolean(user) && !currentRole);
+
+  const isAllowed = currentRole === "super_admin" || currentRole === "admin" || isSuperAdmin;
 
   useEffect(() => {
     // JANGAN memutuskan apa pun selama role belum selesai dibaca
@@ -33,7 +45,14 @@ export default function AdminLayout({ children }) {
       router.replace("/masuk");
       return;
     }
-  }, [user, userProfile, isRolePending, router]);
+
+    // 2. Jika bukan peran super admin, otomatis alihkan ke dasbor perannya
+    if (!isAllowed) {
+      const dashboardPath = getRoleRedirectPath(currentRole);
+      router.replace(dashboardPath);
+      return;
+    }
+  }, [user, currentRole, isRolePending, isAllowed, router]);
 
   // Selama role belum selesai dibaca dari users/{uid}, tampilkan layar Memuat... dan jangan memutuskan apa pun
   if (isRolePending) {
@@ -62,10 +81,6 @@ export default function AdminLayout({ children }) {
       </div>
     );
   }
-
-  // Hanya boleh diakses oleh super_admin
-  const currentRole = String(userProfile?.role || "").trim().toLowerCase();
-  const isAllowed = currentRole === "super_admin";
 
   // Peran lain melihat halaman Akses Ditolak
   if (!isAllowed) {

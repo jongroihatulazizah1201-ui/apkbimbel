@@ -194,7 +194,7 @@ export default function KelasYangDiajarTutorDetailPage({ params }) {
               {kelas.siswaList.map((siswa) => {
                 const isHadir = hadirIds.includes(siswa.id);
                 const userObj = mockUsers.find((u) => u.id === siswa.id || u.nama === siswa.nama);
-                const avatarUrl = userObj?.avatar || "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&q=80";
+                const avatarUrl = userObj?.avatar || "/avatars/default_user.svg";
 
                 return (
                   <label

@@ -1,12 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { Clock, MapPin, ArrowRight, BookOpen, Layers } from "lucide-react";
 import { mockKelas, mockUsers } from "@/lib/mockData";
+import { useAuth } from "@/components/AuthProvider";
 
 export default function BerandaSiswaPage() {
-  const [hasClass, setHasClass] = useState(true);
+  const { user, userProfile } = useAuth();
+  const userEmail = String(userProfile?.email || user?.email || "").toLowerCase();
+  const displayName = 
+    userProfile?.nama || 
+    (userEmail.includes("arif") ? "Pak Arif" : 
+     userEmail.includes("superadmin") ? "Super Admin" :
+     user?.displayName || 
+     user?.email?.split("@")[0] || 
+     "Siswa");
+  const hasClass = Boolean(mockKelas && mockKelas.length > 0);
 
   // Ambil data mock kelas berikutnya (PRD 4.2)
   const nextClass = mockKelas[0];
@@ -20,7 +29,7 @@ export default function BerandaSiswaPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="max-w-xl">
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#1F2937]">
-              Semangat Belajar, Raka!
+              Semangat Belajar, {displayName}!
             </h1>
             <p className="text-sm text-[#5A6B78] mt-1 leading-relaxed">
               Jadwal tatap muka berikutnya sudah siap. Pastikan materi sudah dibaca dan tugas diselesaikan sebelum sesi belajar dimulai.
@@ -35,33 +44,6 @@ export default function BerandaSiswaPage() {
                 <span className="w-2 h-2 rounded-full bg-[#EA580C]"></span>
                 <span className="text-[#5A6B78]">Presensi: <strong className="text-[#1F2937] tabular-nums">100% Hadir</strong></span>
               </div>
-            </div>
-          </div>
-
-          {/* Pengalih Keadaan Tampilan (PRD 4.2 Simulasi Siswa Baru vs Terdaftar) */}
-          <div className="flex flex-col items-start md:items-end gap-1.5 shrink-0 pt-2 md:pt-0">
-            <span className="text-xs text-[#5A6B78] font-medium">Uji Tampilan PRD 4.2:</span>
-            <div className="flex items-center gap-1 bg-[#F7F5F2] p-1 rounded-lg border border-[#E5E7EB]">
-              <button
-                onClick={() => setHasClass(true)}
-                className={`px-3 py-1 rounded text-xs font-semibold transition ${
-                  hasClass 
-                    ? 'bg-[#EA580C] text-white shadow-sm' 
-                    : 'text-[#5A6B78] hover:text-[#1F2937]'
-                }`}
-              >
-                Ada Kelas & Tugas
-              </button>
-              <button
-                onClick={() => setHasClass(false)}
-                className={`px-3 py-1 rounded text-xs font-semibold transition ${
-                  !hasClass 
-                    ? 'bg-[#EA580C] text-white shadow-sm' 
-                    : 'text-[#5A6B78] hover:text-[#1F2937]'
-                }`}
-              >
-                Belum Terdaftar
-              </button>
             </div>
           </div>
         </div>

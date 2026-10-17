@@ -162,7 +162,7 @@ function LaporanContent() {
         <div className="panel p-0 border border-slate-200/90 shadow-sm overflow-hidden">
           <div className="p-5 flex justify-between items-center border-b border-slate-100 bg-slate-50/50">
             <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <Layers className="w-5 h-5 text-purple-600" /> 3. Beban Aktivitas Kelas per Tutor
+              <Layers className="w-5 h-5 text-[#EA580C]" /> 3. Beban Aktivitas Kelas per Tutor
             </h2>
             <span className="text-xs text-slate-500 font-medium">Periode: <strong className="text-slate-800">{bulan}</strong></span>
           </div>
@@ -183,7 +183,7 @@ function LaporanContent() {
                     <div className="flex items-center gap-3">
                       <div className="relative w-8 h-8 rounded-full overflow-hidden border border-slate-200 shrink-0">
                         <Image
-                          src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"
+                          src="/avatars/kak_dimas.jpg"
                           alt="Kak Dimas"
                           fill
                           className="object-cover"
@@ -201,7 +201,7 @@ function LaporanContent() {
                     <div className="flex items-center gap-3">
                       <div className="relative w-8 h-8 rounded-full overflow-hidden border border-slate-200 shrink-0">
                         <Image
-                          src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80"
+                          src="/avatars/nadia.jpg"
                           alt="Kak Nadia"
                           fill
                           className="object-cover"

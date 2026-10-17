@@ -73,8 +73,12 @@ export default function KelolaPenggunaAdminPage() {
     return () => unsubscribe();
   }, []);
 
-  // Filter pencarian nama/email dan saringan peran (siswa, staf, tutor, super_admin)
-  const filteredUsers = users.filter((u) => {
+  // Hanya tampilkan pengguna yang dikelola (Siswa, Staf, Tutor).
+  // Super Admin (Pak Arif) adalah pengelola sistem dengan akses penuh sehingga tidak perlu dikelola oleh dirinya sendiri.
+  const manageableUsers = users.filter((u) => u.role !== "super_admin" && u.role !== "admin");
+
+  // Filter pencarian nama/email dan saringan peran (siswa, staf, tutor)
+  const filteredUsers = manageableUsers.filter((u) => {
     const namaStr = (u.nama || "").toLowerCase();
     const emailStr = (u.email || "").toLowerCase();
     const query = searchTerm.toLowerCase();
@@ -83,12 +87,11 @@ export default function KelolaPenggunaAdminPage() {
     return matchSearch && matchRole;
   });
 
-  // Hitung metrik pengguna per peran
-  const totalCount = users.length;
-  const siswaCount = users.filter((u) => u.role === "siswa").length;
-  const tutorCount = users.filter((u) => u.role === "tutor").length;
-  const stafCount = users.filter((u) => u.role === "staf").length;
-  const adminCount = users.filter((u) => u.role === "super_admin" || u.role === "admin").length;
+  // Hitung metrik pengguna yang dikelola per peran
+  const totalCount = manageableUsers.length;
+  const siswaCount = manageableUsers.filter((u) => u.role === "siswa").length;
+  const tutorCount = manageableUsers.filter((u) => u.role === "tutor").length;
+  const stafCount = manageableUsers.filter((u) => u.role === "staf").length;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -101,14 +104,14 @@ export default function KelolaPenggunaAdminPage() {
           Kelola Pengguna
         </h1>
         <p className="text-xs sm:text-sm text-[#5A6B78] mt-1 max-w-2xl">
-          Atur hak akses pengguna di koleksi <code>users</code>: tetapkan peran Siswa, Staf, Tutor, atau Super Admin, serta kendalikan status aktif akun.
+          Atur hak akses pengguna di koleksi <code>users</code>: tetapkan peran Siswa, Staf, atau Tutor, serta kendalikan status aktif akun.
         </p>
       </div>
 
-      {/* Ringkasan Metrik Pengguna */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6 text-xs">
+      {/* Ringkasan Metrik Pengguna yang Dikelola */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6 text-xs">
         <div className="bg-white border border-[#E5E7EB] rounded-xl p-3 shadow-2xs">
-          <span className="text-[#5A6B78] font-medium block">Total Akun</span>
+          <span className="text-[#5A6B78] font-medium block">Total Pengguna</span>
           <span className="text-xl font-black text-[#1F2937] tabular-nums mt-0.5 block">{totalCount}</span>
         </div>
         <div className="bg-white border border-[#E5E7EB] rounded-xl p-3 shadow-2xs">
@@ -122,10 +125,6 @@ export default function KelolaPenggunaAdminPage() {
         <div className="bg-white border border-[#E5E7EB] rounded-xl p-3 shadow-2xs">
           <span className="text-sky-700 font-medium block">Staf</span>
           <span className="text-xl font-black text-sky-700 tabular-nums mt-0.5 block">{stafCount}</span>
-        </div>
-        <div className="bg-white border border-[#E5E7EB] rounded-xl p-3 shadow-2xs col-span-2 sm:col-span-1">
-          <span className="text-purple-700 font-medium block">Super Admin</span>
-          <span className="text-xl font-black text-purple-700 tabular-nums mt-0.5 block">{adminCount}</span>
         </div>
       </div>
 
@@ -145,7 +144,7 @@ export default function KelolaPenggunaAdminPage() {
             />
           </div>
 
-          {/* Fitur Saringan Peran (siswa, staf, tutor, super_admin) */}
+          {/* Fitur Saringan Peran (siswa, staf, tutor) */}
           <div className="flex items-center gap-2">
             <Filter className="w-3.5 h-3.5 text-[#5A6B78]" />
             <span className="text-xs text-[#5A6B78] font-bold uppercase tracking-wider">Peran:</span>
@@ -154,11 +153,10 @@ export default function KelolaPenggunaAdminPage() {
               onChange={(e) => setRoleFilter(e.target.value)}
               className="px-3 py-1.5 bg-white border border-[#E5E7EB] rounded-lg text-xs font-semibold text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#EA580C]/20 focus:border-[#EA580C]"
             >
-              <option value="semua">Semua Peran ({users.length})</option>
+              <option value="semua">Semua Peran ({manageableUsers.length})</option>
               <option value="siswa">Siswa ({siswaCount})</option>
               <option value="staf">Staf ({stafCount})</option>
               <option value="tutor">Tutor ({tutorCount})</option>
-              <option value="super_admin">Super Admin ({adminCount})</option>
             </select>
           </div>
         </div>
@@ -195,7 +193,7 @@ export default function KelolaPenggunaAdminPage() {
                   let roleDisplay = "Siswa";
 
                   if (user.role === "super_admin" || user.role === "admin") {
-                    roleBadgeStyle = "bg-purple-50 text-purple-800 border-purple-200";
+                    roleBadgeStyle = "bg-stone-100 text-[#1F2937] border-stone-300";
                     roleDisplay = "Super Admin";
                   } else if (user.role === "tutor") {
                     roleBadgeStyle = "bg-emerald-50 text-emerald-800 border-emerald-200";
