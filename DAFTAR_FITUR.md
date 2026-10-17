@@ -29,6 +29,30 @@ Dokumen ini merangkum daftar seluruh fitur fungsional, non-fungsional, serta bat
   - Penolakan akses ke halaman `/masuk` atau `/daftar` bagi pengguna yang sudah memiliki sesi aktif.
 - **1.4. Keluar / Logout**
   - Fitur keluar dari aplikasi yang membersihkan sesi pengguna dan mengembalikan ke halaman `/masuk`.
+- **1.5. Penjagaan Rute Siswa (*SiswaRouteGuard*)**
+  - Diterapkan pada seluruh rute siswa: `/beranda`, `/program`, `/kelas` (beserta `/kelas/[id]`), dan `/tugas` (beserta `/tugas/[id]`).
+  - Hak akses eksklusif hanya untuk peran **`siswa`** dan **`super_admin`**.
+  - Pengguna yang belum masuk (*unauthenticated*) otomatis dialihkan ke `/masuk`.
+  - Pengguna dengan peran lain (misal `staf` atau `tutor`) melihat tampilan resmi **Akses Ditolak** dengan tombol menuju dasbor masing-masing.
+  - Penundaan keputusan (*blocking pending state*): Selama dokumen `users/{uid}` belum selesai dibaca dari server, sistem menampilkan status **"Memuat..."** dan tidak mengambil keputusan pengalihan prematur.
+- **1.6. Penjagaan Rute Staf Administrasi (*StafLayout Guard*)**
+  - Diterapkan pada seluruh rute modul staf: `/staf`, `/staf/pendaftaran`, `/staf/siswa`, dan `/staf/kelas` (beserta `/staf/kelas/[id]`).
+  - Hak akses eksklusif hanya untuk peran **`staf`** dan **`super_admin`**.
+  - Pengguna yang belum masuk (*unauthenticated*) otomatis dialihkan ke `/masuk`.
+  - Pengguna dengan peran lain (misal `siswa` atau `tutor`) melihat tampilan resmi **Akses Ditolak** dengan tombol kembali ke dasbor sesuai perannya.
+  - Penundaan keputusan (*blocking pending state*): Selama dokumen `users/{uid}` belum selesai dibaca dari server, sistem menampilkan status **"Memuat..."** dan tidak mengambil keputusan apa pun.
+- **1.7. Penjagaan Rute Tutor Pengajar (*TutorLayout Guard*)**
+  - Diterapkan pada seluruh rute modul tutor: `/tutor`, `/tutor/kelas` (beserta `/tutor/kelas/[id]`), dan `/tutor/tugas` (beserta `/tutor/tugas/[id]`).
+  - Hak akses eksklusif hanya untuk peran **`tutor`** dan **`super_admin`**.
+  - Pengguna yang belum masuk (*unauthenticated*) otomatis dialihkan ke `/masuk`.
+  - Pengguna dengan peran lain (misal `siswa` atau `staf`) melihat tampilan resmi **Akses Ditolak** dengan tombol kembali ke dasbor sesuai perannya.
+  - Penundaan keputusan (*blocking pending state*): Selama dokumen `users/{uid}` belum selesai dibaca dari server, sistem menampilkan status **"Memuat..."** dan tidak mengambil keputusan apa pun.
+- **1.8. Penjagaan Rute Super Admin (*AdminLayout Guard*)**
+  - Diterapkan pada seluruh rute modul admin: `/admin`, `/admin/pengguna` (beserta `/admin/pengguna/[id]`), `/admin/program`, dan `/admin/laporan`.
+  - Hak akses eksklusif hanya untuk peran **`super_admin`**.
+  - Pengguna yang belum masuk (*unauthenticated*) otomatis dialihkan ke `/masuk`.
+  - Pengguna dengan peran lain (misal `siswa`, `staf`, atau `tutor`) melihat tampilan resmi **Akses Ditolak** dengan tombol kembali ke dasbor sesuai perannya.
+  - Penundaan keputusan (*blocking pending state*): Selama dokumen `users/{uid}` belum selesai dibaca dari server, sistem menampilkan status **"Memuat..."** dan tidak mengambil keputusan apa pun.
 
 ---
 

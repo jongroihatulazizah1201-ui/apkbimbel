@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { BookOpen, Check, AlertCircle, Clock, CheckCircle2, XCircle } from "lucide-react";
+import { BookOpen, Check, AlertCircle, Clock, CheckCircle2, XCircle, Users } from "lucide-react";
 import { mockPrograms, mockPendaftaran } from "@/lib/mockData";
 
 export default function ProgramSiswaPage() {
@@ -9,7 +9,7 @@ export default function ProgramSiswaPage() {
   const [notifMessage, setNotifMessage] = useState("");
 
   const handleAjukan = (program) => {
-    // Cek apakah pendaftaran untuk program ini sudah ada dan aktif/menunggu
+    // PRD 4.3: Siswa tidak bisa mengajukan program yang sama bila pendaftarannya masih menunggu atau aktif
     const existing = pendaftaranList.find(
       (p) => p.programId === program.id && (p.status === "menunggu" || p.status === "aktif")
     );
@@ -31,7 +31,7 @@ export default function ProgramSiswaPage() {
     };
 
     setPendaftaranList([newPend, ...pendaftaranList]);
-    setNotifMessage(`Pendaftaran terkirim untuk ${program.nama}. Selesaikan pembayaran di kantor Langkah Juara.`);
+    setNotifMessage(`Pendaftaran terkirim. Selesaikan pembayaran di kantor Langkah Juara.`);
   };
 
   const formatRupiah = (number) => {
@@ -43,46 +43,65 @@ export default function ProgramSiswaPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      {/* Header Halaman (PRD 5.1 & Tema Terang) */}
       <div className="mb-8">
-        <span className="text-xs font-semibold text-primary uppercase tracking-wider">Katalog Belajar</span>
-        <h1 className="text-2xl md:text-3xl font-extrabold text-app-text mt-1">Pilihan Program Bimbingan</h1>
-        <p className="text-sm text-app-muted">Pilih paket program bimbingan belajar terbaik untuk jenjang SMP dan SMA</p>
+        <div className="text-xs font-bold uppercase tracking-wider text-[#EA580C] mb-1">
+          Katalog Akademik
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1F2937] tracking-tight">Pilihan Program Bimbingan</h1>
+        <p className="text-sm text-[#5A6B78] mt-1">Pilih paket bimbingan belajar tatap muka terbaik untuk jenjang SMP dan SMA di Makassar.</p>
       </div>
 
       {notifMessage && (
-        <div className="mb-8 p-4 bg-orange-50 border border-primary/30 rounded-xl text-primary text-sm flex items-start gap-3 shadow-sm">
-          <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+        <div className="mb-6 p-4 bg-[#FFF7ED] border border-orange-200 rounded-lg text-[#EA580C] text-sm flex items-start gap-3 shadow-sm">
+          <AlertCircle className="w-5 h-5 flex-shrink-0 text-[#EA580C] mt-0.5" />
           <div>
-            <div className="font-semibold mb-0.5">Pemberitahuan Pendaftaran</div>
-            <div className="text-xs text-app-text">{notifMessage}</div>
+            <div className="font-bold text-[#1F2937] mb-0.5">Pemberitahuan Pendaftaran</div>
+            <div className="text-xs text-[#5A6B78]">{notifMessage}</div>
           </div>
         </div>
       )}
 
-      {/* Grid Program Aktif */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      {/* Grid Program Aktif (PRD 4.3: Nama, Jenjang, Jumlah Pertemuan, Harga) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         {mockPrograms.filter(p => p.aktif).map((prog) => {
           const isPendingOrActive = pendaftaranList.some(
             (p) => p.programId === prog.id && (p.status === "menunggu" || p.status === "aktif")
           );
 
           return (
-            <div key={prog.id} className="panel flex flex-col justify-between border-t-4 border-t-primary hover:shadow-md transition">
+            <div 
+              key={prog.id} 
+              className="panel flex flex-col justify-between"
+            >
               <div>
-                <div className="flex justify-between items-center mb-3">
-                  <span className={`badge ${prog.jenjang === 'SMA' ? 'bg-indigo-100 text-indigo-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                {/* Gambar Program */}
+                <div className="relative h-44 rounded-lg overflow-hidden mb-4 bg-stone-100">
+                  <img
+                    src={prog.gambar || "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=800&auto=format&fit=crop"}
+                    alt={prog.nama}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-2.5 left-2.5 bg-white text-[#1F2937] font-bold text-xs px-2.5 py-1 rounded shadow-sm border border-[#E5E7EB]">
                     Jenjang {prog.jenjang}
-                  </span>
-                  <span className="text-xs text-app-muted font-medium tabular-nums">{prog.jumlahPertemuan} Pertemuan</span>
+                  </div>
+                  <div className="absolute bottom-2.5 left-2.5 bg-black/70 text-white text-xs px-2.5 py-1 rounded flex items-center gap-1.5 tabular-nums">
+                    <Clock className="w-3.5 h-3.5 text-white" />
+                    <span>{prog.jumlahPertemuan} Pertemuan Tatap Muka</span>
+                  </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-app-text mb-1">{prog.nama}</h3>
-                <p className="text-xs text-app-muted mb-4 leading-relaxed">{prog.deskripsi}</p>
+                <h3 className="text-lg font-bold text-[#1F2937] mb-1.5">
+                  {prog.nama}
+                </h3>
+                <p className="text-xs text-[#5A6B78] leading-relaxed mb-4">
+                  {prog.deskripsi}
+                </p>
 
-                <div className="my-4 pt-4 border-t border-app-border">
-                  <div className="text-xs text-app-muted mb-1">Biaya Program:</div>
-                  <div className="text-2xl font-bold text-primary tabular-nums tracking-tight">
+                <div className="mb-4 pt-3 border-t border-[#E5E7EB]">
+                  <div className="text-[11px] text-[#5A6B78] font-medium mb-0.5">Biaya Program:</div>
+                  <div className="text-xl font-black text-[#1F2937] tabular-nums">
                     {formatRupiah(prog.harga)}
                   </div>
                 </div>
@@ -92,15 +111,15 @@ export default function ProgramSiswaPage() {
                 type="button"
                 disabled={isPendingOrActive}
                 onClick={() => handleAjukan(prog)}
-                className={`w-full py-2.5 rounded-md text-sm font-semibold transition flex items-center justify-center gap-2 ${
+                className={`w-full py-2.5 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 ${
                   isPendingOrActive
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    ? 'bg-stone-100 text-[#5A6B78] border border-[#E5E7EB] cursor-not-allowed'
                     : 'btn-primary'
                 }`}
               >
                 {isPendingOrActive ? (
                   <>
-                    <Check className="w-4 h-4" /> Telah Diajukan
+                    <Check className="w-4 h-4 text-[#15A66A]" /> Pendaftaran Sedang Diproses
                   </>
                 ) : (
                   "Ajukan Pendaftaran"
@@ -111,23 +130,31 @@ export default function ProgramSiswaPage() {
         })}
       </div>
 
-      {/* Bagian Pendaftaran Saya */}
+      {/* Bagian Pendaftaran Saya (PRD 4.3: Pil Berwarna Menunggu, Aktif, Ditolak) */}
       <div className="panel">
-        <h2 className="text-lg font-bold text-app-text mb-4 flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-primary" /> Pendaftaran Saya
-        </h2>
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E5E7EB]">
+          <div>
+            <h2 className="text-base font-bold text-[#1F2937] flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-[#EA580C]" /> Pendaftaran Saya
+            </h2>
+            <p className="text-xs text-[#5A6B78] mt-0.5">Daftar pengajuan pendaftaran program bimbingan belajar</p>
+          </div>
+          <span className="text-xs text-[#5A6B78] tabular-nums">
+            Total: {pendaftaranList.length} Pengajuan
+          </span>
+        </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm border-collapse">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-app-border text-xs text-app-muted uppercase tracking-wider">
-                <th className="py-3 px-4">Nama Program</th>
-                <th className="py-3 px-4">Tanggal Pengajuan</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Catatan Staf</th>
+              <tr className="bg-[#F7F5F2] text-[#5A6B78] uppercase tracking-wider font-semibold border-b border-[#E5E7EB]">
+                <th className="py-2.5 px-3">Nama Program</th>
+                <th className="py-2.5 px-3">Tanggal Pengajuan</th>
+                <th className="py-2.5 px-3">Status</th>
+                <th className="py-2.5 px-3">Catatan Staf</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-[#E5E7EB]">
               {pendaftaranList.map((item) => {
                 let badgeClass = "badge-pending";
                 let statusLabel = "Menunggu";
@@ -144,20 +171,22 @@ export default function ProgramSiswaPage() {
                 }
 
                 return (
-                  <tr key={item.id} className="hover:bg-gray-50/60 transition">
-                    <td className="py-3.5 px-4 font-semibold text-app-text">{item.programNama}</td>
-                    <td className="py-3.5 px-4 text-app-muted tabular-nums">{item.dibuatPada}</td>
-                    <td className="py-3.5 px-4">
-                      <span className={`badge ${badgeClass} gap-1.5`}>
+                  <tr key={item.id} className="hover:bg-stone-50/80 transition-colors">
+                    <td className="py-3 px-3 font-semibold text-[#1F2937]">{item.programNama}</td>
+                    <td className="py-3 px-3 text-[#5A6B78] tabular-nums">{item.dibuatPada}</td>
+                    <td className="py-3 px-3">
+                      <span className={`badge ${badgeClass} text-xs font-semibold`}>
                         <StatusIcon className="w-3.5 h-3.5" />
                         {statusLabel}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 text-xs text-app-muted">
+                    <td className="py-3 px-3 text-[#5A6B78]">
                       {item.catatanStaf ? (
-                        <span className="text-status-rejected font-medium">{item.catatanStaf}</span>
+                        <span className="text-[#E53935] font-medium bg-[#FDF2F2] px-2 py-0.5 rounded border border-[#FECACA]">
+                          {item.catatanStaf}
+                        </span>
                       ) : (
-                        <span className="text-gray-400">-</span>
+                        <span className="text-[#5A6B78] italic">Menunggu verifikasi pembayaran di kantor</span>
                       )}
                     </td>
                   </tr>

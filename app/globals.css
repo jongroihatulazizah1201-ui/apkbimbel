@@ -2,59 +2,125 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --primary: #EA580C;
-  --primary-hover: #C2410C;
-  --primary-light: #FFF7ED;
-  --background: #F7F5F2;
-  --panel: #FFFFFF;
-  --foreground: #1F2937;
-  --text-muted: #5A6B78;
-  --border: #E5E7EB;
-  --border-light: #F3F4F6;
-  
-  /* Status Colors */
-  --status-pending: #F59E0B;
-  --status-active: #15A66A;
-  --status-rejected: #E53935;
-  --status-unsubmitted: #6B7280;
+@layer base {
+  :root {
+    /* PRD 5.1 Warna Langkah Juara */
+    --primary: #EA580C;
+    --primary-hover: #C2410C;
+    --primary-light: #FFF7ED;
+    --background: #F7F5F2;
+    --panel: #FFFFFF;
+    --foreground: #1F2937;
+    --text-muted: #5A6B78;
+    --border: #E5E7EB;
+    --border-light: #F3F4F6;
+    
+    /* PRD 5.2 Warna Status */
+    --status-pending: #F59E0B;
+    --status-active: #15A66A;
+    --status-rejected: #E53935;
+    --status-unsubmitted: #6B7280;
 
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 16px;
+    --radius-sm: 6px;
+    --radius: 10px;
+    --radius-lg: 14px;
+    --radius-full: 9999px;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.011em;
+  }
 }
 
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* Tabular nums untuk jam, tanggal, nilai, dan harga */
+/* PRD 5.3 Tabular nums untuk jam, tanggal, nilai, dan harga */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
 
-/* Card Panel Standard */
+/* PRD 5.1 Panel Putih Bersih */
 .panel {
-  background-color: var(--panel);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
   padding: 1.5rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Tombol Oranye Juara */
+.panel:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.05);
+}
+
+.panel-interactive {
+  cursor: pointer;
+}
+
+.panel-interactive:hover {
+  border-color: #EA580C;
+}
+
+/* PRD 5.1 Tombol Utama (Oranye Juara #EA580C) */
 .btn-primary {
-  background-color: var(--primary);
-  color: #ffffff;
-  padding: 0.625rem 1.125rem;
-  border-radius: var(--radius-sm);
+  background-color: #EA580C;
+  color: #FFFFFF;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
   font-weight: 600;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 1px 2px rgba(234, 88, 12, 0.2);
+  transition: background-color 0.15s ease, transform 0.1s ease;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.btn-primary:hover {
+  background-color: #C2410C;
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+/* Tombol Sekunder (Panel Putih & Garis Halus) */
+.btn-secondary {
+  background-color: #FFFFFF;
+  color: #1F2937;
+  border: 1px solid #D1D5DB;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  background-color: #F7F5F2;
+  border-color: #9CA3AF;
+  color: #111827;
+}
+
+.btn-dark {
+  background-color: #1F2937;
+  color: #FFFFFF;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -62,55 +128,52 @@ body {
   transition: background-color 0.15s ease;
 }
 
-.btn-primary:hover {
-  background-color: var(--primary-hover);
+.btn-dark:hover {
+  background-color: #111827;
 }
 
-.btn-secondary {
-  background-color: #ffffff;
-  color: var(--foreground);
-  border: 1px solid var(--border);
-  padding: 0.625rem 1.125rem;
-  border-radius: var(--radius-sm);
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  transition: all 0.15s ease;
-}
-
-.btn-secondary:hover {
-  background-color: #F9FAFB;
-  border-color: #D1D5DB;
-}
-
-/* Status Badges */
+/* PRD 5.2 Status Badges */
 .badge {
   display: inline-flex;
   align-items: center;
+  gap: 0.375rem;
   padding: 0.25rem 0.625rem;
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 600;
+  line-height: 1;
 }
 
+/* Menunggu, Dikumpulkan: #F59E0B */
 .badge-pending {
-  background-color: #FEF3C7;
+  background-color: #FFFBEB;
   color: #B45309;
+  border: 1px solid #FDE68A;
 }
 
+/* Aktif, Dinilai: #15A66A */
 .badge-active {
-  background-color: #D1FAE5;
-  color: #047857;
+  background-color: #E8F8F0;
+  color: #15A66A;
+  border: 1px solid #B6ECD5;
 }
 
+/* Ditolak, Terlambat: #E53935 */
 .badge-rejected {
-  background-color: #FEE2E2;
-  color: #B91C1C;
+  background-color: #FDF2F2;
+  color: #E53935;
+  border: 1px solid #FECACA;
 }
 
+/* Belum dikumpulkan: #6B7280 */
 .badge-unsubmitted {
   background-color: #F3F4F6;
-  color: #4B5563;
+  color: #6B7280;
+  border: 1px solid #E5E7EB;
+}
+
+/* Bilah Atas Akses Cepat */
+.top-bar-juara {
+  background-color: #EA580C;
+  color: #FFFFFF;
 }

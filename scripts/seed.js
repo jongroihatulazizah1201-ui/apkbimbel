@@ -274,11 +274,11 @@ async function seedFirestore() {
     console.log(` - pengumpulan/${id} (Nilai: ${data.nilai})`);
   }
 
-  console.log("\n✅ Berhasil mengisi seluruh seed data untuk 7 koleksi PRD 7.1!");
+  console.log("\n[SUKSES] Berhasil mengisi seluruh seed data untuk 7 koleksi PRD 7.1!");
   process.exit(0);
 }
 
 seedFirestore().catch((err) => {
-  console.error("❌ Gagal mengisi seed data:", err);
+  console.error("[GAGAL] Gagal mengisi seed data:", err);
   process.exit(1);
 });

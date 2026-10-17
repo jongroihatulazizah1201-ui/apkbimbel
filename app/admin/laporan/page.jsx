@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import { BarChart3, Calendar, Users, Award, BookOpen, Layers } from "lucide-react";
 import { mockPrograms, mockKelas, mockPendaftaran, mockUsers } from "@/lib/mockData";
 
@@ -23,70 +24,88 @@ function LaporanContent() {
     router.push(`/admin/laporan?bulan=${val}`);
   };
 
+  const formatRupiah = (number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      maximumFractionDigits: 0
+    }).format(number);
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      {/* Header Laporan */}
+      {/* Editorial Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <span className="text-xs font-semibold text-primary uppercase tracking-wider">Rekapitulasi Operasional</span>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-app-text mt-1">Laporan Bulanan Bimbel</h1>
-          <p className="text-sm text-app-muted">Rekap siswa aktif per program, persentase kehadiran per kelas, dan beban mengajar tutor</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-[#1F2937] tracking-tight">Laporan Bulanan Bimbel</h1>
+          <p className="text-sm text-[#5A6B78] mt-1">Rekap siswa aktif per program, persentase kehadiran per kelas, dan beban mengajar tutor.</p>
         </div>
 
         {/* Pilihan Periode Bulan (Tersimpan di URL) */}
-        <div className="flex items-center gap-2 bg-white px-3.5 py-2 rounded-xl border border-app-border shadow-sm">
+        <div className="flex items-center gap-2.5 bg-white px-4 py-2.5 rounded-xl border border-slate-200/90 shadow-sm self-start md:self-auto">
           <Calendar className="w-4 h-4 text-primary" />
-          <label className="text-xs font-semibold text-app-text">Periode Bulan:</label>
+          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Periode:</label>
           <input
             type="month"
             value={bulan}
             onChange={handleMonthChange}
-            className="text-xs font-bold text-primary bg-transparent focus:outline-none cursor-pointer"
+            className="text-xs font-bold text-slate-900 bg-transparent focus:outline-none cursor-pointer"
           />
         </div>
       </div>
 
       <div className="space-y-8">
         {/* Tabel 1: Siswa Aktif per Program */}
-        <div className="panel overflow-hidden border-t-4 border-t-primary">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-base font-bold text-app-text flex items-center gap-2">
+        <div className="panel p-0 border border-slate-200/90 shadow-sm overflow-hidden">
+          <div className="p-5 flex justify-between items-center border-b border-slate-100 bg-slate-50/50">
+            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
               <Users className="w-5 h-5 text-primary" /> 1. Rekap Siswa Aktif per Program
             </h2>
-            <span className="text-xs text-app-muted">Periode: {bulan}</span>
+            <span className="text-xs text-slate-500 font-medium">Periode: <strong className="text-slate-800">{bulan}</strong></span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="border-b border-app-border text-xs text-app-muted uppercase tracking-wider bg-app-bg/50">
-                  <th className="py-3 px-4">Nama Program</th>
-                  <th className="py-3 px-4">Jenjang</th>
-                  <th className="py-3 px-4">Biaya Kursus</th>
-                  <th className="py-3 px-4">Jumlah Siswa Terdaftar</th>
-                  <th className="py-3 px-4">Status Program</th>
+                <tr className="border-b border-slate-100 text-xs font-bold text-slate-500 uppercase tracking-wider bg-slate-50/80">
+                  <th className="py-3.5 px-5">Nama Program</th>
+                  <th className="py-3.5 px-4">Jenjang</th>
+                  <th className="py-3.5 px-4">Biaya Kursus</th>
+                  <th className="py-3.5 px-4">Jumlah Siswa Terdaftar</th>
+                  <th className="py-3.5 px-5">Status Program</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-slate-100">
                 {mockPrograms.map((prog) => {
                   const studentCount = prog.id === "prog-1" ? 35 : prog.id === "prog-2" ? 23 : 0;
+                  const cover = prog.gambar || "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80";
+
                   return (
-                    <tr key={prog.id} className="hover:bg-gray-50/70 transition">
-                      <td className="py-3.5 px-4 font-bold text-app-text">{prog.nama}</td>
-                      <td className="py-3.5 px-4">
-                        <span className="badge bg-gray-100 text-gray-700 text-[10px]">{prog.jenjang}</span>
+                    <tr key={prog.id} className="hover:bg-slate-50/80 transition">
+                      <td className="py-4 px-5 font-bold text-slate-900">
+                        <div className="flex items-center gap-3">
+                          <div className="relative w-10 h-8 rounded-lg overflow-hidden border border-slate-200 shrink-0">
+                            <Image src={cover} alt={prog.nama} fill className="object-cover" />
+                          </div>
+                          <span>{prog.nama}</span>
+                        </div>
                       </td>
-                      <td className="py-3.5 px-4 tabular-nums text-app-muted">
-                        Rp {prog.harga.toLocaleString("id-ID")}
+                      <td className="py-4 px-4">
+                        <span className={`badge ${prog.jenjang === 'SMA' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200'} text-[10px] font-bold`}>
+                          {prog.jenjang}
+                        </span>
                       </td>
-                      <td className="py-3.5 px-4 font-extrabold text-primary tabular-nums">
-                        {studentCount} <span className="text-xs font-normal text-app-muted">Siswa Aktif</span>
+                      <td className="py-4 px-4 tabular-nums text-slate-600 text-xs font-semibold">
+                        {formatRupiah(prog.harga)}
                       </td>
-                      <td className="py-3.5 px-4">
+                      <td className="py-4 px-4 font-black text-primary tabular-nums text-sm">
+                        {studentCount} <span className="text-xs font-semibold text-slate-500">Siswa Aktif</span>
+                      </td>
+                      <td className="py-4 px-5">
                         {prog.aktif ? (
-                          <span className="badge badge-active text-[10px]">Aktif</span>
+                          <span className="badge badge-active text-[10px] font-bold">Aktif</span>
                         ) : (
-                          <span className="badge badge-unsubmitted text-[10px]">Nonaktif</span>
+                          <span className="badge badge-unsubmitted text-[10px] font-bold">Nonaktif</span>
                         )}
                       </td>
                     </tr>
@@ -98,36 +117,38 @@ function LaporanContent() {
         </div>
 
         {/* Tabel 2: Kehadiran per Kelas */}
-        <div className="panel overflow-hidden border-t-4 border-t-status-active">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-base font-bold text-app-text flex items-center gap-2">
-              <Award className="w-5 h-5 text-status-active" /> 2. Tingkat Kehadiran per Kelas
+        <div className="panel p-0 border border-slate-200/90 shadow-sm overflow-hidden">
+          <div className="p-5 flex justify-between items-center border-b border-slate-100 bg-slate-50/50">
+            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <Award className="w-5 h-5 text-emerald-600" /> 2. Tingkat Kehadiran per Kelas
             </h2>
-            <span className="text-xs text-app-muted">Periode: {bulan}</span>
+            <span className="text-xs text-slate-500 font-medium">Periode: <strong className="text-slate-800">{bulan}</strong></span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="border-b border-app-border text-xs text-app-muted uppercase tracking-wider bg-app-bg/50">
-                  <th className="py-3 px-4">Nama Kelas</th>
-                  <th className="py-3 px-4">Program</th>
-                  <th className="py-3 px-4">Tutor Pengampu</th>
-                  <th className="py-3 px-4">Total Pertemuan</th>
-                  <th className="py-3 px-4">Rata-rata Presensi Hadir</th>
+                <tr className="border-b border-slate-100 text-xs font-bold text-slate-500 uppercase tracking-wider bg-slate-50/80">
+                  <th className="py-3.5 px-5">Nama Kelas</th>
+                  <th className="py-3.5 px-4">Program</th>
+                  <th className="py-3.5 px-4">Tutor Pengampu</th>
+                  <th className="py-3.5 px-4">Total Pertemuan</th>
+                  <th className="py-3.5 px-5">Rata-rata Presensi Hadir</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-slate-100">
                 {mockKelas.map((k) => {
                   const rate = k.id === "kelas-1" ? "94.2%" : "90.5%";
                   return (
-                    <tr key={k.id} className="hover:bg-gray-50/70 transition">
-                      <td className="py-3.5 px-4 font-bold text-app-text">{k.nama}</td>
-                      <td className="py-3.5 px-4"><span className="badge badge-active text-[10px]">{k.programNama}</span></td>
-                      <td className="py-3.5 px-4 text-app-text font-medium">{k.tutorNama}</td>
-                      <td className="py-3.5 px-4 tabular-nums text-app-muted">{k.pertemuan.length} Sesi Terlaksana</td>
-                      <td className="py-3.5 px-4">
-                        <span className="text-status-active font-extrabold tabular-nums text-base">{rate}</span>
+                    <tr key={k.id} className="hover:bg-slate-50/80 transition">
+                      <td className="py-4 px-5 font-bold text-slate-900">{k.nama}</td>
+                      <td className="py-4 px-4">
+                        <span className="badge badge-active text-[10px] font-semibold">{k.programNama}</span>
+                      </td>
+                      <td className="py-4 px-4 text-slate-800 font-semibold text-xs">{k.tutorNama}</td>
+                      <td className="py-4 px-4 tabular-nums text-slate-600 text-xs font-medium">{k.pertemuan.length} Sesi Terlaksana</td>
+                      <td className="py-4 px-5">
+                        <span className="text-emerald-700 font-black tabular-nums text-base">{rate}</span>
                       </td>
                     </tr>
                   );
@@ -138,36 +159,60 @@ function LaporanContent() {
         </div>
 
         {/* Tabel 3: Jumlah Kelas & Pertemuan per Tutor */}
-        <div className="panel overflow-hidden border-t-4 border-t-purple-600">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-base font-bold text-app-text flex items-center gap-2">
+        <div className="panel p-0 border border-slate-200/90 shadow-sm overflow-hidden">
+          <div className="p-5 flex justify-between items-center border-b border-slate-100 bg-slate-50/50">
+            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
               <Layers className="w-5 h-5 text-purple-600" /> 3. Beban Aktivitas Kelas per Tutor
             </h2>
-            <span className="text-xs text-app-muted">Periode: {bulan}</span>
+            <span className="text-xs text-slate-500 font-medium">Periode: <strong className="text-slate-800">{bulan}</strong></span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="border-b border-app-border text-xs text-app-muted uppercase tracking-wider bg-app-bg/50">
-                  <th className="py-3 px-4">Nama Tutor</th>
-                  <th className="py-3 px-4">Email Tutor</th>
-                  <th className="py-3 px-4">Jumlah Kelas Diampu</th>
-                  <th className="py-3 px-4">Jumlah Pertemuan Terlaksana</th>
+                <tr className="border-b border-slate-100 text-xs font-bold text-slate-500 uppercase tracking-wider bg-slate-50/80">
+                  <th className="py-3.5 px-5">Nama Tutor</th>
+                  <th className="py-3.5 px-4">Email Tutor</th>
+                  <th className="py-3.5 px-4">Jumlah Kelas Diampu</th>
+                  <th className="py-3.5 px-5">Jumlah Pertemuan Terlaksana</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
-                <tr className="hover:bg-gray-50/70 transition">
-                  <td className="py-3.5 px-4 font-bold text-app-text">Kak Dimas</td>
-                  <td className="py-3.5 px-4 text-app-muted">dimas@langkahjuara.id</td>
-                  <td className="py-3.5 px-4 font-semibold text-app-text tabular-nums">2 Rombongan Belajar</td>
-                  <td className="py-3.5 px-4 text-primary font-bold tabular-nums">8 Sesi Pertemuan</td>
+              <tbody className="divide-y divide-slate-100">
+                <tr className="hover:bg-slate-50/80 transition">
+                  <td className="py-4 px-5 font-bold text-slate-900">
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-8 h-8 rounded-full overflow-hidden border border-slate-200 shrink-0">
+                        <Image
+                          src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"
+                          alt="Kak Dimas"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <span>Kak Dimas</span>
+                    </div>
+                  </td>
+                  <td className="py-4 px-4 text-slate-600 font-mono text-xs">dimas@langkahjuara.id</td>
+                  <td className="py-4 px-4 font-bold text-slate-900 tabular-nums text-xs">2 Rombongan Belajar</td>
+                  <td className="py-4 px-5 text-primary font-black tabular-nums text-sm">8 Sesi Pertemuan</td>
                 </tr>
-                <tr className="hover:bg-gray-50/70 transition">
-                  <td className="py-3.5 px-4 font-bold text-app-text">Kak Nadia</td>
-                  <td className="py-3.5 px-4 text-app-muted">nadia@langkahjuara.id</td>
-                  <td className="py-3.5 px-4 font-semibold text-app-text tabular-nums">1 Rombongan Belajar</td>
-                  <td className="py-3.5 px-4 text-primary font-bold tabular-nums">4 Sesi Pertemuan</td>
+                <tr className="hover:bg-slate-50/80 transition">
+                  <td className="py-4 px-5 font-bold text-slate-900">
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-8 h-8 rounded-full overflow-hidden border border-slate-200 shrink-0">
+                        <Image
+                          src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80"
+                          alt="Kak Nadia"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <span>Kak Nadia</span>
+                    </div>
+                  </td>
+                  <td className="py-4 px-4 text-slate-600 font-mono text-xs">nadia@langkahjuara.id</td>
+                  <td className="py-4 px-4 font-bold text-slate-900 tabular-nums text-xs">1 Rombongan Belajar</td>
+                  <td className="py-4 px-5 text-primary font-black tabular-nums text-sm">4 Sesi Pertemuan</td>
                 </tr>
               </tbody>
             </table>
@@ -180,8 +225,9 @@ function LaporanContent() {
 
 export default function LaporanAdminPage() {
   return (
-    <Suspense fallback={<div className="max-w-6xl mx-auto px-4 py-16 text-center text-sm text-app-muted">Memuat laporan...</div>}>
+    <Suspense fallback={<div className="max-w-6xl mx-auto px-4 py-16 text-center text-sm text-slate-500">Memuat laporan...</div>}>
       <LaporanContent />
     </Suspense>
   );
 }
+

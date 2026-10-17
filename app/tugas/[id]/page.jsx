@@ -1,14 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 import Link from "next/link";
-import { Clock, Send, ExternalLink, CheckCircle2, MessageSquare, Award, AlertCircle } from "lucide-react";
+import Image from "next/image";
+import { Clock, Send, Award, AlertCircle, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { mockKelas } from "@/lib/mockData";
 
-export default function TugasSiswaDetailPage() {
-  const [submissionState, setSubmissionState] = useState("dinilai"); // "belum", "dikumpulkan", "dinilai", "terlambat"
+export default function TugasSiswaDetailPage({ params }) {
+  const resolvedParams = use(params);
+  const id = resolvedParams?.id;
+
+  const kelas = mockKelas.find((k) => k.tugasList.some((t) => t.id === id));
+  const task = kelas?.tugasList.find((t) => t.id === id);
+
+  const [submissionState, setSubmissionState] = useState(task?.status || "belum");
   const [tautan, setTautan] = useState("https://drive.google.com/file/d/jawaban-raka-utbk/view");
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+
+  if (!kelas || !task) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+        <div className="panel p-8 bg-white border border-[#E5E7EB] rounded-2xl shadow-sm">
+          <h1 className="text-2xl font-extrabold text-[#1F2937] mb-2">Tugas tidak ditemukan</h1>
+          <p className="text-sm text-[#5A6B78] mb-6">
+            Tugas pembelajaran dengan ID &ldquo;{id}&rdquo; tidak terdaftar di sistem.
+          </p>
+          <Link href="/tugas" className="btn-primary inline-flex items-center gap-2">
+            <ArrowLeft className="w-4 h-4" /> Kembali ke Daftar Tugas
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,36 +46,52 @@ export default function TugasSiswaDetailPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <Link href="/kelas/demo-id" className="text-xs text-primary font-semibold hover:underline mb-4 inline-block">
-        ← Kembali ke Kelas
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <Link href={`/kelas/${kelas.id}`} className="text-xs text-[#EA580C] font-semibold hover:underline mb-4 inline-flex items-center gap-1.5 transition">
+        <ArrowLeft className="w-3.5 h-3.5" /> Kembali ke {kelas.nama}
       </Link>
 
-      {/* State Switcher Preview Demo */}
-      <div className="bg-white p-3 rounded-lg border border-app-border text-xs flex items-center justify-between gap-3 mb-6">
-        <span className="font-semibold text-app-muted">Simulasi 4 Status Tugas (PRD 4.5):</span>
+      {/* Simulasi 4 Keadaan Status Tugas Sesuai PRD 4.5 & 5.2 */}
+      <div className="panel p-3.5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <span className="font-semibold text-[#1F2937]">Simulasi 4 Keadaan Tugas (PRD 4.5):</span>
         <div className="flex gap-1.5 flex-wrap">
           <button
             onClick={() => { setSubmissionState("belum"); setSuccessMsg(""); }}
-            className={`px-2.5 py-1 rounded font-medium ${submissionState === 'belum' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700'}`}
+            className={`px-3 py-1 rounded text-xs font-semibold transition ${
+              submissionState === 'belum' 
+                ? 'bg-[#6B7280] text-white shadow-sm' 
+                : 'bg-[#F7F5F2] text-[#5A6B78] hover:text-[#1F2937] border border-[#E5E7EB]'
+            }`}
           >
-            Belum Dikumpulkan
+            Belum dikumpulkan
           </button>
           <button
             onClick={() => { setSubmissionState("dikumpulkan"); setSuccessMsg(""); }}
-            className={`px-2.5 py-1 rounded font-medium ${submissionState === 'dikumpulkan' ? 'bg-status-pending text-white' : 'bg-gray-100 text-gray-700'}`}
+            className={`px-3 py-1 rounded text-xs font-semibold transition ${
+              submissionState === 'dikumpulkan' 
+                ? 'bg-[#F59E0B] text-white shadow-sm' 
+                : 'bg-[#F7F5F2] text-[#5A6B78] hover:text-[#1F2937] border border-[#E5E7EB]'
+            }`}
           >
             Dikumpulkan
           </button>
           <button
             onClick={() => { setSubmissionState("dinilai"); setSuccessMsg(""); }}
-            className={`px-2.5 py-1 rounded font-medium ${submissionState === 'dinilai' ? 'bg-status-active text-white' : 'bg-gray-100 text-gray-700'}`}
+            className={`px-3 py-1 rounded text-xs font-semibold transition ${
+              submissionState === 'dinilai' 
+                ? 'bg-[#15A66A] text-white shadow-sm' 
+                : 'bg-[#F7F5F2] text-[#5A6B78] hover:text-[#1F2937] border border-[#E5E7EB]'
+            }`}
           >
             Dinilai (Nilai 85)
           </button>
           <button
             onClick={() => { setSubmissionState("terlambat"); setSuccessMsg(""); }}
-            className={`px-2.5 py-1 rounded font-medium ${submissionState === 'terlambat' ? 'bg-status-rejected text-white' : 'bg-gray-100 text-gray-700'}`}
+            className={`px-3 py-1 rounded text-xs font-semibold transition ${
+              submissionState === 'terlambat' 
+                ? 'bg-[#E53935] text-white shadow-sm' 
+                : 'bg-[#F7F5F2] text-[#5A6B78] hover:text-[#1F2937] border border-[#E5E7EB]'
+            }`}
           >
             Terlambat
           </button>
@@ -59,11 +99,11 @@ export default function TugasSiswaDetailPage() {
       </div>
 
       <div className="panel space-y-6">
-        {/* Status Badge */}
-        <div className="flex justify-between items-start">
+        {/* Header Judul & Status Badge (PRD 5.2) */}
+        <div className="flex justify-between items-start gap-4">
           <div>
-            <span className="text-xs font-semibold text-app-muted">Kelas: Intensif UTBK A</span>
-            <h1 className="text-2xl font-bold text-app-text mt-1">Latihan Penalaran Umum 3</h1>
+            <span className="text-xs font-bold text-[#EA580C] uppercase tracking-wider">Kelas: {kelas.nama}</span>
+            <h1 className="text-2xl font-extrabold text-[#1F2937] tracking-tight mt-1">{task.judul}</h1>
           </div>
           <div>
             {submissionState === "belum" && <span className="badge badge-unsubmitted">Belum dikumpulkan</span>}
@@ -74,57 +114,67 @@ export default function TugasSiswaDetailPage() {
         </div>
 
         {/* Deskripsi & Batas Waktu */}
-        <div className="bg-app-bg p-4 rounded-lg space-y-3">
-          <p className="text-sm text-app-text leading-relaxed">
-            Kerjakan seluruh soal penalaran umum paket 3 pada materi modul. Cantumkan tautan Google Drive dokumen jawaban Anda dengan akses yang sudah dibuka.
+        <div className="bg-[#F7F5F2] border border-[#E5E7EB] p-4 rounded-lg space-y-3">
+          <p className="text-xs text-[#1F2937] leading-relaxed">
+            {task.deskripsi}
           </p>
-          <div className="flex items-center gap-2 text-xs text-app-muted border-t border-app-border/80 pt-3">
-            <Clock className="w-4 h-4 text-primary" />
-            <span>Batas Waktu Pengumpulan: <strong className="text-app-text tabular-nums">20 Oktober 2026, 23.59 WITA</strong></span>
+          <div className="flex items-center gap-2 text-xs text-[#5A6B78] border-t border-[#E5E7EB] pt-2.5">
+            <Clock className="w-3.5 h-3.5 text-[#EA580C]" />
+            <span>Batas Waktu: <strong className="text-[#1F2937] tabular-nums">{task.batasWaktu}</strong></span>
           </div>
         </div>
 
-        {/* Hasil Penilaian jika status dinilai */}
+        {/* Hasil Penilaian jika status dinilai (PRD 4.5: Nilai dan Komentar) */}
         {submissionState === "dinilai" && (
-          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5 space-y-3">
+          <div className="bg-[#E8F8F0] border border-[#B6ECD5] rounded-lg p-5 space-y-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-emerald-800 font-bold text-base">
-                <Award className="w-5 h-5 text-emerald-600" /> Hasil Penilaian Tutor
+              <div className="flex items-center gap-2 text-[#15A66A] font-extrabold text-base">
+                <Award className="w-5 h-5 text-[#15A66A]" /> Hasil Penilaian Tutor
               </div>
-              <div className="text-3xl font-extrabold text-emerald-700 tabular-nums">
-                85 <span className="text-sm font-medium text-emerald-600">/ 100</span>
+              <div className="text-3xl font-black text-[#15A66A] tabular-nums">
+                85 <span className="text-sm font-normal text-[#15A66A]">/ 100</span>
               </div>
             </div>
-            <div className="border-t border-emerald-200/60 pt-3">
-              <div className="text-xs text-emerald-800 font-semibold mb-1 flex items-center gap-1.5">
-                <MessageSquare className="w-3.5 h-3.5" /> Komentar Kak Dimas:
+            <div className="border-t border-[#B6ECD5] pt-3">
+              <div className="flex items-center gap-2 text-xs text-[#15A66A] font-bold mb-1.5">
+                <div className="relative w-5 h-5 rounded-full overflow-hidden border border-[#B6ECD5] shrink-0">
+                  <Image
+                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"
+                    alt="Kak Dimas Tutor"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <span>Umpan Balik Kak Dimas:</span>
               </div>
-              <p className="text-sm text-emerald-900 bg-white/70 p-3 rounded-md">
+              <p className="text-xs text-[#1F2937] bg-white border border-[#B6ECD5] p-3 rounded-lg leading-relaxed italic">
                 “Pengerjaan tugas Raka sudah sangat terstruktur dan logika analisis pada penalaran deduktif di nomor 15 sangat tepat. Pertahankan!”
               </p>
             </div>
           </div>
         )}
 
-        {/* Form Pengumpulan Tautan */}
-        <div>
-          <h3 className="text-sm font-bold text-app-text mb-3">Pengumpulan Jawaban Siswa</h3>
+        {/* Form Pengumpulan Tautan Jawaban */}
+        <div className="pt-2">
+          <h3 className="text-sm font-bold text-[#1F2937] mb-2">Pengumpulan Jawaban Siswa</h3>
 
           {successMsg && (
-            <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-lg">
-              {successMsg}
+            <div className="mb-4 p-3 bg-[#E8F8F0] border border-[#B6ECD5] text-[#15A66A] text-xs rounded-lg flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+              <span>{successMsg}</span>
             </div>
           )}
 
           {errorMsg && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-800 text-xs rounded-lg flex items-center gap-2">
-              <AlertCircle className="w-4 h-4" /> {errorMsg}
+            <div className="mb-4 p-3 bg-[#FDF2F2] border border-[#FECACA] text-[#E53935] text-xs rounded-lg flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span>{errorMsg}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-app-text uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-[#1F2937] uppercase tracking-wider mb-1.5">
                 Tautan Jawaban (Google Drive)*
               </label>
               <input
@@ -134,10 +184,10 @@ export default function TugasSiswaDetailPage() {
                 value={tautan}
                 onChange={(e) => setTautan(e.target.value)}
                 placeholder="https://drive.google.com/file/d/..."
-                className="w-full px-3.5 py-2.5 bg-white border border-app-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary disabled:bg-gray-100 disabled:text-gray-500"
+                className="w-full px-3.5 py-2.5 bg-white border border-[#E5E7EB] rounded-lg text-sm text-[#1F2937] placeholder-[#5A6B78]/60 focus:outline-none focus:border-[#EA580C] focus:ring-1 focus:ring-[#EA580C] disabled:bg-stone-100 disabled:text-[#5A6B78]"
               />
-              <p className="text-[11px] text-app-muted mt-1.5">
-                Pastikan izin berbagi tautan Google Drive disetel ke "Siapa saja yang memiliki link dapat melihat".
+              <p className="text-[11px] text-[#5A6B78] mt-1">
+                Wajib diawali dengan https://. Pastikan hak akses Google Drive disetel untuk dapat dilihat oleh tutor.
               </p>
             </div>
 
@@ -149,8 +199,8 @@ export default function TugasSiswaDetailPage() {
             )}
 
             {submissionState === "dinilai" && (
-              <div className="text-xs text-app-muted italic">
-                *Tugas yang sudah dinilai tidak dapat diubah kembali.
+              <div className="text-xs text-[#5A6B78] italic">
+                *Tugas yang sudah dinilai oleh tutor tidak dapat diubah kembali.
               </div>
             )}
           </form>
