@@ -2,6 +2,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { Clock, MapPin, User, FileText, ExternalLink, Calendar, CheckCircle2, AlertCircle, ArrowLeft, BookOpen } from "lucide-react";
 import { mockKelas, mockUsers } from "@/lib/mockData";
+export function generateStaticParams() {
+  return mockKelas.map((k) => ({ id: k.id }));
+}
 
 export default async function RincianKelasSiswaPage({ params }) {
   const { id } = await params;

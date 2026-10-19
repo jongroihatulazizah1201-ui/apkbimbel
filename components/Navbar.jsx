@@ -80,16 +80,21 @@ export default function Navbar() {
   // Deteksi peran aktif untuk navigasi modul
   let currentRole = "publik";
   if (user) {
-    if (pathname.startsWith("/staf")) currentRole = "staf";
-    else if (pathname.startsWith("/tutor")) currentRole = "tutor";
-    else if (pathname.startsWith("/admin")) currentRole = "admin";
-    else if (pathname === "/") currentRole = "publik";
-    else {
-      // Pada rute siswa (/beranda, /kelas, /tugas, /program)
-      if (isSuperAdmin) {
-        currentRole = "siswa"; // Super Admin dapat menjelajahi modul siswa
+    if (isSuperAdmin) {
+      // Super Admin memiliki wewenang untuk beralih konteks sidebar sesuai modul yang dikunjungi
+      if (pathname.startsWith("/staf")) currentRole = "staf";
+      else if (pathname.startsWith("/tutor")) currentRole = "tutor";
+      else if (pathname.startsWith("/admin")) currentRole = "admin";
+      else if (pathname === "/") currentRole = "publik";
+      else currentRole = "siswa";
+    } else {
+      // Pengguna non-admin (Siswa, Staf, Tutor) HANYA menampilkan menu sesuai peran akunnya sendiri.
+      // Jika mereka membuka URL sembarangan (misal Siswa membuka /admin), sidebar TETAP menu perannya.
+      if (pathname === "/") {
+        currentRole = "publik";
       } else {
-        currentRole = effectiveRole || "siswa";
+        const userRole = String(effectiveRole || "").trim().toLowerCase();
+        currentRole = userRole || "siswa";
       }
     }
   }
