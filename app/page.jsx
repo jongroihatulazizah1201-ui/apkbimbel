@@ -87,6 +87,40 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Tutor Profile Section */}
+      <section className="py-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="text-xs font-bold uppercase tracking-wider text-[#EA580C] mb-1">
+            Tenaga Pengajar
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1F2937] tracking-tight">Tutor Langkah Juara</h2>
+          <p className="text-[#5A6B78] text-sm mt-1">
+            Belajar langsung bersama pengajar yang berdedikasi tinggi dan berpengalaman di bidangnya.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {tutors.map((tutor) => (
+            <div key={tutor.id} className="panel text-center flex flex-col items-center">
+              <div className="relative mb-3">
+                <img
+                  src={tutor.avatar}
+                  alt={tutor.nama}
+                  className="w-20 h-20 rounded-full object-cover border-2 border-[#E5E7EB]"
+                />
+                <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#15A66A] border-2 border-white rounded-full"></span>
+              </div>
+              <h3 className="font-bold text-base text-[#1F2937]">{tutor.nama}</h3>
+              <p className="text-xs text-[#EA580C] font-semibold mb-1 uppercase tracking-wide">Tutor Langkah Juara</p>
+              <p className="text-xs text-[#5A6B78] mb-3 tabular-nums">{tutor.noHp} • {tutor.email}</p>
+              <div className="w-full pt-3 border-t border-[#E5E7EB] flex items-center justify-center">
+                <span className="badge badge-active text-[11px]">Tutor Aktif</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Navigasi Modul Sesuai Bab 4 PRD */}
       <section className="py-14 bg-white border-t border-[#E5E7EB]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -176,40 +210,6 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Tutor Profile Section */}
-      <section className="py-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <div className="text-xs font-bold uppercase tracking-wider text-[#EA580C] mb-1">
-            Tenaga Pengajar
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1F2937] tracking-tight">Tutor Langkah Juara</h2>
-          <p className="text-[#5A6B78] text-sm mt-1">
-            Belajar langsung bersama pengajar yang berdedikasi tinggi dan berpengalaman di bidangnya.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tutors.map((tutor) => (
-            <div key={tutor.id} className="panel text-center flex flex-col items-center">
-              <div className="relative mb-3">
-                <img
-                  src={tutor.avatar}
-                  alt={tutor.nama}
-                  className="w-20 h-20 rounded-full object-cover border-2 border-[#E5E7EB]"
-                />
-                <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#15A66A] border-2 border-white rounded-full"></span>
-              </div>
-              <h3 className="font-bold text-base text-[#1F2937]">{tutor.nama}</h3>
-              <p className="text-xs text-[#EA580C] font-semibold mb-1 uppercase tracking-wide">Tutor Langkah Juara</p>
-              <p className="text-xs text-[#5A6B78] mb-3 tabular-nums">{tutor.noHp} • {tutor.email}</p>
-              <div className="w-full pt-3 border-t border-[#E5E7EB] flex items-center justify-center">
-                <span className="badge badge-active text-[11px]">Tutor Aktif</span>
-              </div>
-            </div>
-          ))}
         </div>
       </section>
     </div>
