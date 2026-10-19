@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { ArrowRight, BookOpen, GraduationCap, Users, ShieldCheck, CheckCircle2, Clock, MapPin, Trophy } from "lucide-react";
-import { mockPrograms, mockUsers } from "@/lib/mockData";
+import { ArrowRight, BookOpen, GraduationCap, Users, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { mockUsers } from "@/lib/mockData";
 
 export default function HomePage() {
-  const activePrograms = mockPrograms.filter(p => p.aktif);
   const tutors = mockUsers.filter(u => u.role === "tutor");
 
   return (
@@ -85,72 +84,6 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Program Unggulan Section */}
-      <section className="py-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8">
-          <div>
-            <div className="text-xs font-bold uppercase tracking-wider text-[#EA580C] mb-1">
-              Katalog Program
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1F2937] tracking-tight">Pilihan Program Bimbel</h2>
-            <p className="text-[#5A6B78] text-sm mt-1 max-w-xl">
-              Kurikulum dirancang spesifik untuk jenjang SMP dan SMA demi memaksimalkan nilai rapor dan kesiapan ujian.
-            </p>
-          </div>
-          <Link href="/program" className="mt-4 md:mt-0 text-sm font-semibold text-[#EA580C] hover:underline inline-flex items-center gap-1">
-            Lihat Semua Program <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {activePrograms.map((prog) => (
-            <div 
-              key={prog.id}
-              className="panel flex flex-col justify-between"
-            >
-              <div>
-                <div className="relative h-44 rounded-lg overflow-hidden mb-4 bg-stone-100">
-                  <img
-                    src={prog.gambar}
-                    alt={prog.nama}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-2.5 left-2.5 bg-white text-[#1F2937] font-bold text-xs px-2.5 py-1 rounded shadow-sm border border-[#E5E7EB]">
-                    {prog.jenjang}
-                  </div>
-                  <div className="absolute bottom-2.5 left-2.5 bg-black/70 text-white text-xs px-2.5 py-1 rounded flex items-center gap-1.5 tabular-nums">
-                    <Clock className="w-3.5 h-3.5 text-white" />
-                    <span>{prog.jumlahPertemuan} Pertemuan</span>
-                  </div>
-                </div>
-
-                <h3 className="text-lg font-bold text-[#1F2937] mb-1.5">
-                  {prog.nama}
-                </h3>
-                <p className="text-xs text-[#5A6B78] leading-relaxed mb-4">
-                  {prog.deskripsi}
-                </p>
-              </div>
-
-              <div className="pt-4 border-t border-[#E5E7EB] mt-auto">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs text-[#5A6B78]">Biaya Program:</span>
-                  <span className="text-base font-extrabold text-[#1F2937] tabular-nums">
-                    Rp {prog.harga.toLocaleString("id-ID")}
-                  </span>
-                </div>
-                <Link 
-                  href="/program" 
-                  className="btn-primary w-full text-xs py-2"
-                >
-                  Ajukan Pendaftaran
-                </Link>
-              </div>
-            </div>
-          ))}
         </div>
       </section>
 
